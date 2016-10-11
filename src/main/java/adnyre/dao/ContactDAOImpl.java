@@ -18,7 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-@Repository
+@Repository("dao")
 public class ContactDAOImpl implements ContactDAO {
 
     @Autowired
@@ -33,8 +33,8 @@ public class ContactDAOImpl implements ContactDAO {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(contact);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int update = jdbcTemplate.update(SQL, namedParameters, keyHolder);
-        Number primaryKey = keyHolder.getKey();
-        contact.setId((long) primaryKey);
+        Number primaryKey = (Number) keyHolder.getKeys().get("id");
+        contact.setId(primaryKey.longValue());
         phoneNumberDAO.createPhoneNumbers(contact.getPhoneNumbers(), contact.getId());
         return update > 0;
     }
@@ -94,8 +94,12 @@ public class ContactDAOImpl implements ContactDAO {
 //        System.out.println(dao.getContactById(1));
         Contact contact = new Contact();
         contact.setId(0);
-        contact.setFirstName("Abe");
-        contact.setLastName("Kobo");
+        contact.setFirstName("Leonid");
+        contact.setLastName("Kuchma");
+        PhoneNumber phoneNumber = new PhoneNumber();
+        phoneNumber.setNumber("888888");
+        phoneNumber.setType("hbfdekj");
+        contact.addPhoneNumber(phoneNumber);
         System.out.println(dao.createContact(contact));
 //        System.out.println(dao.deleteContact(contact));
 //        System.out.println(dao.getAllContacts());

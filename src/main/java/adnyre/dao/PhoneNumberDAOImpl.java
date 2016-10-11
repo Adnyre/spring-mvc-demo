@@ -46,6 +46,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
         String SQL = "INSERT INTO phone_numbers (contact_id, type, number) VALUES (:contact_id, :type, :number)";
         HashMap[] batchValues = new HashMap[phoneNumbers.size()];
         for (int i = 0; i < batchValues.length; i++) {
+            batchValues[i] = new HashMap();
             batchValues[i].put("contact_id", contactId);
             batchValues[i].put("type", phoneNumbers.get(i).getType());
             batchValues[i].put("number", phoneNumbers.get(i).getNumber());
