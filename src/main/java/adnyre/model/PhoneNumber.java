@@ -21,6 +21,15 @@ public class PhoneNumber {
         this.number = number;
     }
 
+    @Override
+    public String toString() {
+        return "PhoneNumber{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
+
     public String getType() {
         return type;
     }

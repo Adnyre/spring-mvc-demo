@@ -1,19 +1,25 @@
 package adnyre.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class Contact {
     private long id;
     private String firstName;
     private String lastName;
-    private Set<PhoneNumber> phoneNumbers;
+    private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
-    public Set<PhoneNumber> getPhoneNumbers() {
+    public List<PhoneNumber> getPhoneNumbers() {
         return phoneNumbers;
     }
 
-    public void setPhoneNumbers(Set<PhoneNumber> phoneNumbers) {
+    public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
+    }
+
+    public void addPhoneNumber(PhoneNumber phoneNumber) {
+        phoneNumbers.add(phoneNumber);
     }
 
     public long getId() {
@@ -46,6 +52,7 @@ public class Contact {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", phoneNumbers=" + phoneNumbers +
                 '}';
     }
 }

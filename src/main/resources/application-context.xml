@@ -9,7 +9,9 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- Scans within the base package of the application for @Component classes to configure as beans -->
-    <context:component-scan base-package="adnyre" />
+    <!--<context:component-scan base-package="adnyre" />-->
+    <context:component-scan base-package="adnyre.dao" />
+    <context:annotation-config />
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${jdbc.driverClassName}"/>
@@ -18,11 +20,22 @@
         <property name="password" value="${jdbc.password}"/>
     </bean>
 
-    <bean id="dao" class="adnyre.dao.ContactDAOImpl">
-        <property name="dataSource" ref="dataSource"/>
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate" >
+        <constructor-arg ref="dataSource"/>
     </bean>
 
-    <bean id="contact" class="adnyre.model.Contact" />
+    <!--<bean id="dao" class="adnyre.dao.ContactDAOImpl" >-->
+        <!--<property name="jdbcTemplate" ref="jdbcTemplate" />-->
+        <!--<property name="phoneNumberDAO" ref="phoneNumberDao" />-->
+    <!--</bean>-->
+
+    <!--<bean id="phoneNumberDao" class="adnyre.dao.PhoneNumberDAOImpl" >-->
+        <!--<property name="jdbcTemplate" ref="jdbcTemplate" />-->
+    <!--</bean>-->
+
+    <!--<bean id="contact" class="adnyre.model.Contact" />-->
+    <!--<bean id="phoneNumber" class="adnyre.model.PhoneNumber" />-->
+
 
     <context:property-placeholder location="jdbc.properties"/>
 
