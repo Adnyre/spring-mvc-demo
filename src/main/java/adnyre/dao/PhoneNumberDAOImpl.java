@@ -115,7 +115,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
     }
 
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("WEB-INF/application-context.xml");
         PhoneNumberDAO dao = context.getBean("phoneNumberDao", PhoneNumberDAO.class);
 //        System.out.println(dao.getContactById(1));
         PhoneNumber pn = new PhoneNumber();

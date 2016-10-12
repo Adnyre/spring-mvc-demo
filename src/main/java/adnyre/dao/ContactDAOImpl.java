@@ -3,7 +3,6 @@ package adnyre.dao;
 import adnyre.model.Contact;
 import adnyre.model.PhoneNumber;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,7 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-@Repository("dao")
+@Repository("contactDao")
 public class ContactDAOImpl implements ContactDAO {
 
     @Autowired
@@ -89,7 +88,7 @@ public class ContactDAOImpl implements ContactDAO {
     public static void main(String[] args) {
 //        ApplicationContext context = new AnnotationConfigApplicationContext(ContactDAOImpl.class);
 //        ContactDAO dao = context.getBean(ContactDAO.class);
-        ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("WEB-INF/application-context.xml");
         ContactDAO dao = context.getBean("dao", ContactDAO.class);
 //        System.out.println(dao.getContactById(1));
         Contact contact = new Contact();

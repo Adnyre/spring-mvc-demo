@@ -3,9 +3,11 @@ package adnyre.service;
 import adnyre.dao.PhoneNumberDAO;
 import adnyre.model.PhoneNumber;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class PhoneNumberServiceImpl implements PhoneNumberService {
 
     @Autowired
