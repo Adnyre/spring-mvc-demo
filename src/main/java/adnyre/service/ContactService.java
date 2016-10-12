@@ -5,7 +5,7 @@ import adnyre.model.Contact;
 import java.util.List;
 
 public interface ContactService {
-    boolean createOrUpdateContact(Contact contact);
+    Contact createOrUpdateContact(Contact contact);
 
     boolean deleteContact(Contact contact);
 

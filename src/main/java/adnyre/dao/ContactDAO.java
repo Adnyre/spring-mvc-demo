@@ -5,9 +5,9 @@ import adnyre.model.Contact;
 import java.util.List;
 
 public interface ContactDAO {
-    boolean createContact(Contact contact);
+    Contact createContact(Contact contact);
 
-    boolean updateContact(Contact contact);
+    Contact updateContact(Contact contact);
 
     boolean deleteContact(Contact contact);
 

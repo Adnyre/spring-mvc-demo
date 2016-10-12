@@ -15,7 +15,7 @@ public class ContactServiceImpl implements ContactService {
     private ContactDAO dao;
 
     @Override
-    public boolean createOrUpdateContact(Contact contact) {
+    public Contact createOrUpdateContact(Contact contact) {
         if (contact.getId() == 0) {
             return dao.createContact(contact);
         } else {
