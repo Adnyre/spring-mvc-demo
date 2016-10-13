@@ -27,9 +27,7 @@ public class PhoneNumberServiceImpl implements PhoneNumberService {
             }
         } catch (DAOException e) {
             LOGGER.error("DAOException in PhoneNumberServiceImpl::createOrUpdatePhoneNumber", e);
-            ServiceException ex = new ServiceException();
-            ex.initCause(e);
-            throw ex;
+            throw new ServiceException(e);
         }
     }
 
@@ -39,9 +37,7 @@ public class PhoneNumberServiceImpl implements PhoneNumberService {
             return dao.deletePhoneNumber(phoneNumber);
         } catch (DAOException e) {
             LOGGER.error("DAOException in PhoneNumberServiceImpl::deletePhoneNumber", e);
-            ServiceException ex = new ServiceException();
-            ex.initCause(e);
-            throw ex;
+            throw new ServiceException(e);
         }
     }
 
@@ -51,9 +47,7 @@ public class PhoneNumberServiceImpl implements PhoneNumberService {
             return dao.getPhoneNumberById(id);
         } catch (DAOException e) {
             LOGGER.error("DAOException in PhoneNumberServiceImpl::getPhoneNumberById", e);
-            ServiceException ex = new ServiceException();
-            ex.initCause(e);
-            throw ex;
+            throw new ServiceException(e);
         }
     }
 
@@ -63,9 +57,7 @@ public class PhoneNumberServiceImpl implements PhoneNumberService {
             return dao.getAllPhoneNumbers(contactId);
         } catch (DAOException e) {
             LOGGER.error("DAOException in PhoneNumberServiceImpl::getAllPhoneNumbers", e);
-            ServiceException ex = new ServiceException();
-            ex.initCause(e);
-            throw ex;
+            throw new ServiceException(e);
         }
     }
 }

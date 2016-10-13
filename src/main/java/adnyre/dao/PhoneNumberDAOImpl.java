@@ -41,9 +41,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
             return jdbcTemplate.update(SQL, namedParameters) > 0;
         } catch (DataAccessException e) {
             LOGGER.error("DataAccessException in PhoneNumberDAOImpl::createPhoneNumber", e);
-            DAOException ex = new DAOException();
-            ex.initCause(e);
-            throw ex;
+            throw new DAOException(e);
         }
     }
 
@@ -62,9 +60,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
             jdbcTemplate.batchUpdate(SQL, batchValues);
         } catch (Exception e) {
             LOGGER.error("DataAccessException in PhoneNumberDAOImpl::createPhoneNumbers", e);
-            DAOException ex = new DAOException();
-            ex.initCause(e);
-            throw ex;
+            throw new DAOException(e);
         }
     }
 
@@ -76,9 +72,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
             return jdbcTemplate.update(SQL, namedParameters) > 0;
         } catch (DataAccessException e) {
             LOGGER.error("DataAccessException in PhoneNumberDAOImpl::updatePhoneNumber", e);
-            DAOException ex = new DAOException();
-            ex.initCause(e);
-            throw ex;
+            throw new DAOException(e);
         }
     }
 
@@ -93,9 +87,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
             jdbcTemplate.batchUpdate(SQL, batchValues);
         } catch (Exception e) {
             LOGGER.error("DataAccessException in PhoneNumberDAOImpl::updatePhoneNumbers", e);
-            DAOException ex = new DAOException();
-            ex.initCause(e);
-            throw ex;
+            throw new DAOException(e);
         }
     }
 
@@ -107,26 +99,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
             return jdbcTemplate.update(SQL, namedParameters) > 0;
         } catch (DataAccessException e) {
             LOGGER.error("DataAccessException in PhoneNumberDAOImpl::deletePhoneNumber", e);
-            DAOException ex = new DAOException();
-            ex.initCause(e);
-            throw ex;
-        }
-    }
-
-    @Override
-    public void deletePhoneNumbers(List<PhoneNumber> phoneNumbers) throws DAOException {
-        String SQL = "DELETE FROM phone_numbers WHERE id=:id";
-        SqlParameterSource[] batchValues = new SqlParameterSource[phoneNumbers.size()];
-        for (int i = 0; i < batchValues.length; i++) {
-            batchValues[i] = new BeanPropertySqlParameterSource(phoneNumbers.get(i));
-        }
-        try {
-            jdbcTemplate.batchUpdate(SQL, batchValues);
-        } catch (Exception e) {
-            LOGGER.error("DataAccessException in PhoneNumberDAOImpl::deletePhoneNumbers", e);
-            DAOException ex = new DAOException();
-            ex.initCause(e);
-            throw ex;
+            throw new DAOException(e);
         }
     }
 
@@ -138,9 +111,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
             return jdbcTemplate.queryForObject(SQL, namedParameters, new PhoneNumberMapper());
         } catch (DataAccessException e) {
             LOGGER.error("DataAccessException in PhoneNumberDAOImpl::getPhoneNumberById", e);
-            DAOException ex = new DAOException();
-            ex.initCause(e);
-            throw ex;
+            throw new DAOException(e);
         }
     }
 
@@ -153,11 +124,21 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
             phoneNumbers = jdbcTemplate.query(SQL, namedParameters, new PhoneNumberMapper());
         } catch (DataAccessException e) {
             LOGGER.error("DataAccessException in PhoneNumberDAOImpl::getAllPhoneNumbers", e);
-            DAOException ex = new DAOException();
-            ex.initCause(e);
-            throw ex;
+            throw new DAOException(e);
         }
         return phoneNumbers;
+    }
+
+    @Override
+    public void deleteAllPhoneNumbers(long contactId) throws DAOException {
+        String SQL = "DELETE FROM phone_numbers WHERE contact_id = :contact_id";
+        Map<String, Long> namedParameters = Collections.singletonMap("contact_id", contactId);
+        try {
+            jdbcTemplate.update(SQL, namedParameters);
+        } catch (DataAccessException e) {
+            LOGGER.error("DataAccessException in PhoneNumberDAOImpl::getAllPhoneNumbers", e);
+            throw new DAOException(e);
+        }
     }
 
     private static class PhoneNumberMapper implements RowMapper<PhoneNumber> {

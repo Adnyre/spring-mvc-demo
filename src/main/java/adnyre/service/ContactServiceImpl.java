@@ -30,9 +30,7 @@ public class ContactServiceImpl implements ContactService {
             }
         } catch (DAOException e) {
             LOGGER.error("DAOException in ContactServiceImpl::createOrUpdateContact", e);
-            ServiceException ex = new ServiceException();
-            ex.initCause(e);
-            throw ex;
+            throw new ServiceException(e);
         }
     }
 
@@ -43,9 +41,7 @@ public class ContactServiceImpl implements ContactService {
             return dao.deleteContact(contact);
         } catch (DAOException e) {
             LOGGER.error("DAOException in ContactServiceImpl::deleteContact", e);
-            ServiceException ex = new ServiceException();
-            ex.initCause(e);
-            throw ex;
+            throw new ServiceException(e);
         }
     }
 
@@ -56,9 +52,7 @@ public class ContactServiceImpl implements ContactService {
             return dao.getContactById(id);
         } catch (DAOException e) {
             LOGGER.error("DAOException in ContactServiceImpl::getContactById", e);
-            ServiceException ex = new ServiceException();
-            ex.initCause(e);
-            throw ex;
+            throw new ServiceException(e);
         }
     }
 
@@ -69,9 +63,7 @@ public class ContactServiceImpl implements ContactService {
             return dao.getAllContacts();
         } catch (DAOException e) {
             LOGGER.error("DAOException in ContactServiceImpl::getAllContacts", e);
-            ServiceException ex = new ServiceException();
-            ex.initCause(e);
-            throw ex;
+            throw new ServiceException(e);
         }
     }
 }

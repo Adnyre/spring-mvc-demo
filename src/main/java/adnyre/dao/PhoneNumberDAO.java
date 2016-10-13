@@ -16,10 +16,9 @@ public interface PhoneNumberDAO {
 
     boolean deletePhoneNumber(PhoneNumber phoneNumber) throws DAOException;
 
-    void deletePhoneNumbers(List<PhoneNumber> phoneNumbers) throws DAOException;
-
     PhoneNumber getPhoneNumberById(long id) throws DAOException;
 
     List<PhoneNumber> getAllPhoneNumbers(long contactId) throws DAOException;
 
+    void deleteAllPhoneNumbers(long contactId) throws DAOException;
 }
