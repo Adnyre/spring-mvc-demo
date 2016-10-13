@@ -23,18 +23,18 @@ import java.util.*;
 
 @Repository("contactDao")
 @Transactional
-public class ContactDAOImpl implements ContactDAO {
+public class ContactDaoImpl implements ContactDao {
 
-    private static final Logger LOGGER = Logger.getLogger(ContactDAOImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(ContactDaoImpl.class);
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    private PhoneNumberDAO phoneNumberDAO;
+    private PhoneNumberDao phoneNumberDAO;
 
     @Override
-    public Contact createContact(Contact contact) throws DAOException {
+    public Contact createContact(Contact contact) throws DaoException {
         String SQL = "INSERT INTO contacts (first_name, last_name) VALUES (:firstName, :lastName)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(contact);
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -48,13 +48,13 @@ public class ContactDAOImpl implements ContactDAO {
             if (update > 0) return contact;
             else return null;
         } catch (DataAccessException e) {
-            LOGGER.error("DataAccessException in ContactDAOImpl::createContact", e);
-            throw new DAOException(e);
+            LOGGER.error("DataAccessException in ContactDaoImpl::createContact", e);
+            throw new DaoException(e);
         }
     }
 
     @Override
-    public Contact updateContact(Contact contact) throws DAOException {
+    public Contact updateContact(Contact contact) throws DaoException {
         String SQL = "UPDATE contacts SET first_name=:firstName, last_name=:lastName WHERE id=:id";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(contact);
         try {
@@ -63,26 +63,26 @@ public class ContactDAOImpl implements ContactDAO {
             if (update > 0) return contact;
             else return null;
         } catch (DataAccessException e) {
-            LOGGER.error("DataAccessException in ContactDAOImpl::updateContact", e);
-            throw new DAOException(e);
+            LOGGER.error("DataAccessException in ContactDaoImpl::updateContact", e);
+            throw new DaoException(e);
         }
     }
 
     @Override
-    public boolean deleteContact(Contact contact) throws DAOException {
+    public boolean deleteContact(Contact contact) throws DaoException {
         String SQL = "DELETE FROM contacts WHERE id = :id";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(contact);
         try {
             phoneNumberDAO.deleteAllPhoneNumbers((long) namedParameters.getValue("id"));
             return jdbcTemplate.update(SQL, namedParameters) > 0;
         } catch (DataAccessException e) {
-            LOGGER.error("DataAccessException in ContactDAOImpl::deleteContact", e);
-            throw new DAOException(e);
+            LOGGER.error("DataAccessException in ContactDaoImpl::deleteContact", e);
+            throw new DaoException(e);
         }
     }
 
     @Override
-    public Contact getContactById(long id) throws DAOException {
+    public Contact getContactById(long id) throws DaoException {
         String SQL = "SELECT contacts.id AS contact_id, first_name, last_name, phone_numbers.id AS phone_number_id, type, number" +
                 " FROM contacts LEFT JOIN phone_numbers ON contacts.id = phone_numbers.contact_id WHERE contacts.id = :id";
         try {
@@ -93,20 +93,20 @@ public class ContactDAOImpl implements ContactDAO {
                 LOGGER.debug("returning contact: " + contacts.get(0));
                 return contacts.get(0);
         } catch (DataAccessException e) {
-            LOGGER.error("DataAccessException in ContactDAOImpl::getContactById", e);
-            throw new DAOException(e);
+            LOGGER.error("DataAccessException in ContactDaoImpl::getContactById", e);
+            throw new DaoException(e);
         }
     }
 
     @Override
-    public List<Contact> getAllContacts() throws DAOException {
+    public List<Contact> getAllContacts() throws DaoException {
         String SQL = "SELECT contacts.id AS contact_id, first_name, last_name, phone_numbers.id AS phone_number_id, type, number" +
                 " FROM contacts LEFT JOIN phone_numbers ON contacts.id = phone_numbers.contact_id";
         try {
             return jdbcTemplate.query(SQL, new ContactResultSetExtractor());
         } catch (DataAccessException e) {
-            LOGGER.error("DataAccessException in ContactDAOImpl::getAllContacts", e);
-            throw new DAOException(e);
+            LOGGER.error("DataAccessException in ContactDaoImpl::getAllContacts", e);
+            throw new DaoException(e);
         }
     }
 
@@ -148,11 +148,11 @@ public class ContactDAOImpl implements ContactDAO {
         }
     }
 
-    public static void main(String[] args) throws DAOException {
-//        ApplicationContext context = new AnnotationConfigApplicationContext(ContactDAOImpl.class);
-//        ContactDAO dao = context.getBean(ContactDAO.class);
+    public static void main(String[] args) throws DaoException {
+//        ApplicationContext context = new AnnotationConfigApplicationContext(ContactDaoImpl.class);
+//        ContactDao dao = context.getBean(ContactDao.class);
         ApplicationContext context = new ClassPathXmlApplicationContext("WEB-INF/application-context.xml");
-        ContactDAO dao = context.getBean("dao", ContactDAO.class);
+        ContactDao dao = context.getBean("dao", ContactDao.class);
 //        System.out.println(dao.getContactById(1));
         Contact contact = new Contact();
         contact.setId(0);

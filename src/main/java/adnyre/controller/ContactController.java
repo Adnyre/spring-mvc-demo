@@ -26,7 +26,7 @@ public class ContactController {
         LOGGER.debug("Finding contact by id: " + id);
         Contact contact = service.getContactById(id);
         if (contact == null) {
-            LOGGER.debug("No contact found wit id: " + id);
+            LOGGER.debug("No contact found with id: " + id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(contact, HttpStatus.OK);
@@ -41,9 +41,21 @@ public class ContactController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Contact> saveContact(@RequestBody Contact contact) {
+    public ResponseEntity<Contact> createContact(@RequestBody Contact contact) {
         LOGGER.debug("Trying to save contact: " + contact);
-        return new ResponseEntity<>(service.createOrUpdateContact(contact), HttpStatus.CREATED);
+        return new ResponseEntity<>(service.createContact(contact), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Contact> updateContact(@RequestBody Contact contact) {
+        LOGGER.debug("Trying to update contact: " + contact);
+        contact = service.updateContact(contact);
+        if (contact == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(service.updateContact(contact), HttpStatus.OK);
+        }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, produces = "text/html")

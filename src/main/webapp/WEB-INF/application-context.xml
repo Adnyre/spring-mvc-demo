@@ -34,12 +34,12 @@
         <constructor-arg ref="dataSource"/>
     </bean>
 
-    <!--<bean id="dao" class="adnyre.dao.ContactDAOImpl" >-->
+    <!--<bean id="dao" class="adnyre.dao.ContactDaoImpl" >-->
     <!--<property name="jdbcTemplate" ref="jdbcTemplate" />-->
     <!--<property name="phoneNumberDAO" ref="phoneNumberDao" />-->
     <!--</bean>-->
 
-    <!--<bean id="phoneNumberDao" class="adnyre.dao.PhoneNumberDAOImpl" >-->
+    <!--<bean id="phoneNumberDao" class="adnyre.dao.PhoneNumberDaoImpl" >-->
     <!--<property name="jdbcTemplate" ref="jdbcTemplate" />-->
     <!--</bean>-->
 

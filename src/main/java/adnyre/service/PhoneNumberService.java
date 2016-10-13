@@ -5,7 +5,7 @@ import adnyre.model.PhoneNumber;
 import java.util.List;
 
 public interface PhoneNumberService {
-    boolean createOrUpdatePhoneNumber(PhoneNumber phoneNumber, long contactId) throws ServiceException;
+    PhoneNumber createOrUpdatePhoneNumber(PhoneNumber phoneNumber, long contactId) throws ServiceException;
 
     boolean deletePhoneNumber(PhoneNumber phoneNumber) throws ServiceException;
 
