@@ -1,4 +1,4 @@
 package adnyre.exception;
 
-public class NoSuchEntryException extends Exception{
+public class NoSuchEntryException extends Exception {
 }

@@ -6,20 +6,20 @@ import java.util.List;
 
 public interface PhoneNumberDAO {
 
-        boolean createPhoneNumber(PhoneNumber phoneNumber, long contactId);
+    boolean createPhoneNumber(PhoneNumber phoneNumber, long contactId) throws DAOException;
 
-        void createPhoneNumbers(List<PhoneNumber> phoneNumbers, long contactId);
+    void createPhoneNumbers(List<PhoneNumber> phoneNumbers, long contactId) throws DAOException;
 
-        boolean updatePhoneNumber(PhoneNumber phoneNumber);
+    boolean updatePhoneNumber(PhoneNumber phoneNumber) throws DAOException;
 
-        void updatePhoneNumbers(List<PhoneNumber> phoneNumbers);
+    void updatePhoneNumbers(List<PhoneNumber> phoneNumbers) throws DAOException;
 
-        boolean deletePhoneNumber(PhoneNumber phoneNumber);
+    boolean deletePhoneNumber(PhoneNumber phoneNumber) throws DAOException;
 
-        void deletePhoneNumbers(List<PhoneNumber> phoneNumbers);
+    void deletePhoneNumbers(List<PhoneNumber> phoneNumbers) throws DAOException;
 
-        PhoneNumber getPhoneNumberById(long id);
+    PhoneNumber getPhoneNumberById(long id) throws DAOException;
 
-        List<PhoneNumber> getAllPhoneNumbers(long contactId);
+    List<PhoneNumber> getAllPhoneNumbers(long contactId) throws DAOException;
 
 }

@@ -1,9 +1,10 @@
 package adnyre.service;
 
 import adnyre.dao.ContactDAO;
+import adnyre.dao.DAOException;
 import adnyre.model.Contact;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,30 +12,65 @@ import java.util.List;
 @Service
 public class ContactServiceImpl implements ContactService {
 
+    private static final Logger LOGGER = Logger.getLogger(ContactServiceImpl.class);
+
     @Autowired
     private ContactDAO dao;
 
     @Override
-    public Contact createOrUpdateContact(Contact contact) {
-        if (contact.getId() == 0) {
-            return dao.createContact(contact);
-        } else {
-            return dao.updateContact(contact);
+    public Contact createOrUpdateContact(Contact contact) throws ServiceException {
+        try {
+            if (contact.getId() == 0) {
+                LOGGER.debug("Creating new contact");
+                return dao.createContact(contact);
+            } else {
+                LOGGER.debug("Updating contact: " + contact);
+                return dao.updateContact(contact);
+            }
+        } catch (DAOException e) {
+            LOGGER.error("DAOException in ContactServiceImpl::createOrUpdateContact", e);
+            ServiceException ex = new ServiceException();
+            ex.initCause(e);
+            throw ex;
         }
     }
 
     @Override
-    public boolean deleteContact(Contact contact) {
-        return dao.deleteContact(contact);
+    public boolean deleteContact(Contact contact) throws ServiceException {
+        try {
+            LOGGER.debug("Deleting contact: " + contact);
+            return dao.deleteContact(contact);
+        } catch (DAOException e) {
+            LOGGER.error("DAOException in ContactServiceImpl::deleteContact", e);
+            ServiceException ex = new ServiceException();
+            ex.initCause(e);
+            throw ex;
+        }
     }
 
     @Override
-    public Contact getContactById(long id) {
-        return dao.getContactById(id);
+    public Contact getContactById(long id) throws ServiceException {
+        try {
+            LOGGER.debug("Getting contact by id: " + id);
+            return dao.getContactById(id);
+        } catch (DAOException e) {
+            LOGGER.error("DAOException in ContactServiceImpl::getContactById", e);
+            ServiceException ex = new ServiceException();
+            ex.initCause(e);
+            throw ex;
+        }
     }
 
     @Override
-    public List<Contact> getAllContacts() {
-        return dao.getAllContacts();
+    public List<Contact> getAllContacts() throws ServiceException {
+        try {
+            LOGGER.debug("Getting all contacts");
+            return dao.getAllContacts();
+        } catch (DAOException e) {
+            LOGGER.error("DAOException in ContactServiceImpl::getAllContacts", e);
+            ServiceException ex = new ServiceException();
+            ex.initCause(e);
+            throw ex;
+        }
     }
 }

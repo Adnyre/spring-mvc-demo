@@ -5,11 +5,11 @@ import adnyre.model.Contact;
 import java.util.List;
 
 public interface ContactService {
-    Contact createOrUpdateContact(Contact contact);
+    Contact createOrUpdateContact(Contact contact) throws ServiceException;
 
-    boolean deleteContact(Contact contact);
+    boolean deleteContact(Contact contact) throws ServiceException;
 
-    Contact getContactById(long id);
+    Contact getContactById(long id) throws ServiceException;
 
-    List<Contact> getAllContacts();
+    List<Contact> getAllContacts() throws ServiceException;
 }
