@@ -26,7 +26,12 @@ public class ContactController {
     public ResponseEntity<Contact> getContact(@PathVariable("id") long id) {
         try {
             LOGGER.debug("Finding contact by id: " + id);
-            return new ResponseEntity<>(service.getContactById(id), HttpStatus.OK);
+            Contact contact = service.getContactById(id);
+            if (contact == null) {
+                LOGGER.debug("No contact found wit id: " + id);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(contact, HttpStatus.OK);
         } catch (ServiceException e) {
             LOGGER.error("ServiceException in ContactController::getContact", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -8,7 +8,8 @@ CREATE TABLE phone_numbers (
   id         SERIAL PRIMARY KEY,
   contact_id INTEGER REFERENCES contacts(id),
   number CHARACTER VARYING(20),
-  type  CHARACTER VARYING(20)
+  type  CHARACTER VARYING(20),
+  CONSTRAINT UQ_NUMBER_TYPE UNIQUE (number, type)
 );
 
 INSERT INTO contacts (first_name, last_name) VALUES ('Andrii', 'Novikov'), ('Taras', 'Martsyniak');

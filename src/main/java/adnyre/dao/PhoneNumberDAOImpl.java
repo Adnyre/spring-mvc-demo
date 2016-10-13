@@ -58,6 +58,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
             batchValues[i].put("number", phoneNumbers.get(i).getNumber());
         }
         try {
+            LOGGER.debug(String.format("Inserting phone numbers %s for contact id %d", phoneNumbers, contactId));
             jdbcTemplate.batchUpdate(SQL, batchValues);
         } catch (Exception e) {
             LOGGER.error("DataAccessException in PhoneNumberDAOImpl::createPhoneNumbers", e);

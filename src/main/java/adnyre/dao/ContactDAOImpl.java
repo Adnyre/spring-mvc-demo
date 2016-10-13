@@ -15,12 +15,14 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
 @Repository("contactDao")
+@Transactional
 public class ContactDAOImpl implements ContactDAO {
 
     private static final Logger LOGGER = Logger.getLogger(ContactDAOImpl.class);
@@ -37,9 +39,11 @@ public class ContactDAOImpl implements ContactDAO {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(contact);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
+            LOGGER.debug("Inserting contact: " + contact);
             int update = jdbcTemplate.update(SQL, namedParameters, keyHolder);
             Number primaryKey = (Number) keyHolder.getKeys().get("id");
             contact.setId(primaryKey.longValue());
+            LOGGER.debug("Creating phone numbers for contact: " + contact);
             phoneNumberDAO.createPhoneNumbers(contact.getPhoneNumbers(), contact.getId());
             if (update > 0) return contact;
             else return null;

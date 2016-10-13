@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
     <!-- Scans within the base package of the application for @Component classes to configure as beans -->
     <!--<context:component-scan base-package="adnyre" />-->
-    <context:component-scan base-package="adnyre" />
-    <context:annotation-config />
+    <context:component-scan base-package="adnyre"/>
+    <context:annotation-config/>
+    <tx:annotation-driven proxy-target-class="true"
+                          transaction-manager="transactionManager"/>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${jdbc.driverClassName}"/>
@@ -20,17 +30,17 @@
         <property name="password" value="${jdbc.password}"/>
     </bean>
 
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate" >
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
         <constructor-arg ref="dataSource"/>
     </bean>
 
     <!--<bean id="dao" class="adnyre.dao.ContactDAOImpl" >-->
-        <!--<property name="jdbcTemplate" ref="jdbcTemplate" />-->
-        <!--<property name="phoneNumberDAO" ref="phoneNumberDao" />-->
+    <!--<property name="jdbcTemplate" ref="jdbcTemplate" />-->
+    <!--<property name="phoneNumberDAO" ref="phoneNumberDao" />-->
     <!--</bean>-->
 
     <!--<bean id="phoneNumberDao" class="adnyre.dao.PhoneNumberDAOImpl" >-->
-        <!--<property name="jdbcTemplate" ref="jdbcTemplate" />-->
+    <!--<property name="jdbcTemplate" ref="jdbcTemplate" />-->
     <!--</bean>-->
 
     <!--<bean id="contact" class="adnyre.model.Contact" />-->
