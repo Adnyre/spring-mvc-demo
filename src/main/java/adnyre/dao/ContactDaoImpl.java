@@ -59,7 +59,7 @@ public class ContactDaoImpl implements ContactDao {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(contact);
         try {
             int update = jdbcTemplate.update(SQL, namedParameters);
-            phoneNumberDAO.updatePhoneNumbers(contact.getPhoneNumbers());
+            phoneNumberDAO.updatePhoneNumbers(contact.getPhoneNumbers(), contact.getId());
             if (update > 0) return contact;
             else return null;
         } catch (DataAccessException e) {

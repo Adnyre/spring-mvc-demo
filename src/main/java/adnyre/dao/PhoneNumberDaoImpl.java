@@ -17,10 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository("phoneNumberDao")
 public class PhoneNumberDaoImpl implements PhoneNumberDao {
@@ -55,21 +52,10 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
 
     @Override
     public List<PhoneNumber> createPhoneNumbers(List<PhoneNumber> phoneNumbers, long contactId) throws DaoException {
-//        String SQL = "INSERT INTO phone_numbers (contact_id, type, number) VALUES (:contact_id, :type, :number)";
-//        HashMap[] batchValues = new HashMap[phoneNumbers.size()];
-//        for (int i = 0; i < batchValues.length; i++) {
-//            batchValues[i] = new HashMap();
-//            batchValues[i].put("contact_id", contactId);
-//            batchValues[i].put("type", phoneNumbers.get(i).getType());
-//            batchValues[i].put("number", phoneNumbers.get(i).getNumber());
-//        }
+        //TODO!!!
         try {
-//            LOGGER.debug(String.format("Inserting phone numbers %s for contact id %d", phoneNumbers, contactId));
-//            KeyHolder keyHolder = new GeneratedKeyHolder();
-//            jdbcTemplate.batchUpdate(SQL, batchValues);
-//            Number primaryKey = (Number) keyHolder.getKeys().get("id");
             for (PhoneNumber phoneNumber : phoneNumbers) {
-                phoneNumber = createPhoneNumber(phoneNumber, contactId);
+                createPhoneNumber(phoneNumber, contactId);
             }
             return phoneNumbers;
         } catch (Exception e) {
@@ -91,15 +77,36 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
         }
     }
 
+//TODO!!!
     @Override
-    public List<PhoneNumber> updatePhoneNumbers(List<PhoneNumber> phoneNumbers) throws DaoException {
-        String SQL = "UPDATE phone_numbers SET type=:type, number=:number WHERE id=:id";
-        SqlParameterSource[] batchValues = new SqlParameterSource[phoneNumbers.size()];
-        for (int i = 0; i < batchValues.length; i++) {
-            batchValues[i] = new BeanPropertySqlParameterSource(phoneNumbers.get(i));
-        }
+    public List<PhoneNumber> updatePhoneNumbers(List<PhoneNumber> phoneNumbers, long contactId) throws DaoException {
         try {
-            jdbcTemplate.batchUpdate(SQL, batchValues);
+            List<PhoneNumber> persisted = getAllPhoneNumbers(contactId);
+            for (PhoneNumber phoneNumber : phoneNumbers) {
+                boolean foundInPersisted = false;
+                for (PhoneNumber persistedPhoneNumber : persisted) {
+                    if (phoneNumber.getId() == persistedPhoneNumber.getId()) {
+                        if (!phoneNumber.equals(persistedPhoneNumber)) {
+                            updatePhoneNumber(phoneNumber);
+                        }
+                        foundInPersisted = true;
+                    }
+                }
+                if (!foundInPersisted) {
+                    createPhoneNumber(phoneNumber, phoneNumber.getId());
+                }
+            }
+            for (PhoneNumber persistedPhoneNumber : persisted) {
+                boolean foundInMemory = false;
+                for (PhoneNumber phoneNumber : phoneNumbers) {
+                    if (phoneNumber.getId() == persistedPhoneNumber.getId()) {
+                        foundInMemory = true;
+                    }
+                }
+                if (!foundInMemory) {
+                    deletePhoneNumber(persistedPhoneNumber);
+                }
+            }
             return phoneNumbers;
         } catch (Exception e) {
             LOGGER.error("DataAccessException in PhoneNumberDaoImpl::updatePhoneNumbers", e);

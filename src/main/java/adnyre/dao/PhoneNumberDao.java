@@ -12,7 +12,7 @@ public interface PhoneNumberDao {
 
     PhoneNumber updatePhoneNumber(PhoneNumber phoneNumber) throws DaoException;
 
-    List<PhoneNumber> updatePhoneNumbers(List<PhoneNumber> phoneNumbers) throws DaoException;
+    List<PhoneNumber> updatePhoneNumbers(List<PhoneNumber> phoneNumbers, long contactId) throws DaoException;
 
     boolean deletePhoneNumber(PhoneNumber phoneNumber) throws DaoException;
 

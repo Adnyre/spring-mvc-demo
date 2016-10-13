@@ -21,6 +21,10 @@ public class Contact {
         phoneNumbers.add(phoneNumber);
     }
 
+    public void deletePhoneNumber(PhoneNumber phoneNumber) {
+        phoneNumbers.remove(phoneNumber);
+    }
+
     public long getId() {
         return id;
     }
