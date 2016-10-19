@@ -2,6 +2,7 @@ package adnyre.dao;
 
 import adnyre.model.PhoneNumber;
 
+import java.io.Serializable;
 import java.util.List;
 
 public interface PhoneNumberDao {
@@ -21,4 +22,5 @@ public interface PhoneNumberDao {
     List<PhoneNumber> getAllPhoneNumbers(long contactId) throws DaoException;
 
     void deleteAllPhoneNumbers(long contactId) throws DaoException;
+
 }

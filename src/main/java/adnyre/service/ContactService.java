@@ -9,7 +9,7 @@ public interface ContactService {
 
     Contact createContact(Contact contact) throws ServiceException;
 
-    boolean deleteContact(Contact contact) throws ServiceException;
+    void deleteContact(Contact contact) throws ServiceException;
 
     Contact getContactById(long id) throws ServiceException;
 

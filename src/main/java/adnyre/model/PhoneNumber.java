@@ -1,19 +1,15 @@
 package adnyre.model;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "phone_numbers", schema = "public", catalog = "spring_mvc_demo_db")
-public class PhoneNumber {
+public class PhoneNumber implements BaseEntity {
     private long id;
     private String number;
     private String type;
 
-    @ManyToOne()
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name="contact_id", referencedColumnName="id")
     public Contact getContact() {
         return contact;
@@ -28,11 +24,13 @@ public class PhoneNumber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    @Override
+    public void setId(Long id) {
         this.id = id;
     }
 

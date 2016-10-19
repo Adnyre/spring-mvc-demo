@@ -2,19 +2,28 @@ package adnyre.model;
 
 import org.hibernate.annotations.Cascade;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "contacts", schema = "public", catalog = "spring_mvc_demo_db")
-public class Contact {
+public class Contact implements BaseEntity{
     private long id;
     private String firstName;
     private String lastName;
     private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "contact")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "contact", cascade = {CascadeType.MERGE})
     public List<PhoneNumber> getPhoneNumbers() {
         return phoneNumbers;
     }
@@ -34,11 +43,13 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    @Override
+    public void setId(Long id) {
         this.id = id;
     }
 

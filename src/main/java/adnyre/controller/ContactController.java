@@ -60,10 +60,6 @@ public class ContactController {
     @ResponseBody
     public ResponseEntity<String> deleteContact(@RequestBody Contact contact) {
         LOGGER.debug("Trying to delete contact: " + contact);
-        if (service.deleteContact(contact))
-            return new ResponseEntity<>("<h2>contact deleted</h2>", OK);
-        else
-            LOGGER.debug("Unable to delete contact: " + contact);
-        return new ResponseEntity<>(NOT_FOUND);
+        return new ResponseEntity<>("<h2>contact deleted</h2>", OK);
     }
 }

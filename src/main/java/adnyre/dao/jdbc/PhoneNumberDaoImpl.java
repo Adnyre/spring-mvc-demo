@@ -188,7 +188,7 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
     private static class PhoneNumberMapper implements RowMapper<PhoneNumber> {
         public PhoneNumber mapRow(ResultSet rs, int rowNum) throws SQLException {
             PhoneNumber res = new PhoneNumber();
-            res.setId(rs.getInt("id"));
+            res.setId(rs.getLong("id"));
             res.setType(rs.getString("type"));
             res.setNumber(rs.getString("number"));
             return res;
@@ -198,13 +198,13 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
     public static void main(String[] args) throws DaoException {
         ApplicationContext context = new ClassPathXmlApplicationContext("WEB-INF/application-context.xml");
         PhoneNumberDao dao = context.getBean("phoneNumberDao", PhoneNumberDao.class);
-//        System.out.println(dao.getContactById(1));
+//        System.out.println(dao.find(1));
         PhoneNumber pn = new PhoneNumber();
-        pn.setId(5);
+        pn.setId(5L);
         pn.setType("home");
         pn.setNumber("002-999-000-11");
         System.out.println(dao.getAllPhoneNumbers(1));
-//        System.out.println(dao.deleteContact(contact));
-//        System.out.println(dao.getAllContacts());
+//        System.out.println(dao.delete(contact));
+//        System.out.println(dao.findAll());
     }
 }

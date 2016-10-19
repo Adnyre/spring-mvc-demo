@@ -21,9 +21,9 @@ public class ContactServiceImpl implements ContactService {
     public Contact createContact(Contact contact) throws ServiceException {
         try {
             LOGGER.debug("Creating new contact");
-            return dao.createContact(contact);
+            return dao.create(contact);
         } catch (DaoException e) {
-            LOGGER.error("DaoException in ContactServiceImpl::createContact", e);
+            LOGGER.error("DaoException in ContactServiceImpl::create", e);
             throw new ServiceException(e);
         }
     }
@@ -32,20 +32,20 @@ public class ContactServiceImpl implements ContactService {
     public Contact updateContact(Contact contact) throws ServiceException {
         try {
             LOGGER.debug("Updating contact: " + contact);
-            return dao.updateContact(contact);
+            return dao.update(contact);
         } catch (DaoException e) {
-            LOGGER.error("DaoException in ContactServiceImpl::updateContact", e);
+            LOGGER.error("DaoException in ContactServiceImpl::update", e);
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public boolean deleteContact(Contact contact) throws ServiceException {
+    public void deleteContact(Contact contact) throws ServiceException {
         try {
             LOGGER.debug("Deleting contact: " + contact);
-            return dao.deleteContact(contact);
+            dao.delete(contact);
         } catch (DaoException e) {
-            LOGGER.error("DaoException in ContactServiceImpl::deleteContact", e);
+            LOGGER.error("DaoException in ContactServiceImpl::delete", e);
             throw new ServiceException(e);
         }
     }
@@ -54,9 +54,9 @@ public class ContactServiceImpl implements ContactService {
     public Contact getContactById(long id) throws ServiceException {
         try {
             LOGGER.debug("Getting contact by id: " + id);
-            return dao.getContactById(id);
+            return dao.find(id);
         } catch (DaoException e) {
-            LOGGER.error("DaoException in ContactServiceImpl::getContactById", e);
+            LOGGER.error("DaoException in ContactServiceImpl::find", e);
             throw new ServiceException(e);
         }
     }
@@ -65,9 +65,9 @@ public class ContactServiceImpl implements ContactService {
     public List<Contact> getAllContacts() throws ServiceException {
         try {
             LOGGER.debug("Getting all contacts");
-            return dao.getAllContacts();
+            return dao.findAll();
         } catch (DaoException e) {
-            LOGGER.error("DaoException in ContactServiceImpl::getAllContacts", e);
+            LOGGER.error("DaoException in ContactServiceImpl::findAll", e);
             throw new ServiceException(e);
         }
     }

@@ -4,14 +4,18 @@ import adnyre.model.Contact;
 
 import java.util.List;
 
-public interface ContactDao {
-    Contact createContact(Contact contact) throws DaoException;
+public interface ContactDao extends GenericDao<Contact, Long> {
+    @Override
+    Contact create(Contact contact) throws DaoException;
 
-    Contact updateContact(Contact contact) throws DaoException;
+    @Override
+    Contact update(Contact contact) throws DaoException;
 
-    boolean deleteContact(Contact contact) throws DaoException;
+    @Override
+    void delete(Contact contact) throws DaoException;
 
-    Contact getContactById(long id) throws DaoException;
+    @Override
+    Contact find(Long id) throws DaoException;
 
-    List<Contact> getAllContacts() throws DaoException;
+    List<Contact> findAll() throws DaoException;
 }
