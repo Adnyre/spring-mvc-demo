@@ -1,11 +1,12 @@
-package adnyre.dao;
+package adnyre.dao.hibernate;
 
-import java.io.Serializable;
+import adnyre.exception.DaoException;
+
 import java.util.List;
 
-public interface GenericDao<T, Long> {
+public interface GenericDao<T> {
     T create(T t) throws DaoException;
-    T find(Long id) throws DaoException;
+    T find(int id) throws DaoException;
     T update(T t) throws DaoException;
     void delete(T t) throws DaoException;
     List<T> findAll() throws DaoException;

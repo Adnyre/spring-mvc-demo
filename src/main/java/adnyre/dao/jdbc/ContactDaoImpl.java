@@ -1,8 +1,6 @@
 package adnyre.dao.jdbc;
 
-import adnyre.dao.ContactDao;
-import adnyre.dao.DaoException;
-import adnyre.dao.PhoneNumberDao;
+import adnyre.exception.DaoException;
 import adnyre.model.Contact;
 import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
@@ -43,7 +41,7 @@ public class ContactDaoImpl implements ContactDao {
             LOGGER.debug("Inserting contact: " + contact);
             int update = jdbcTemplate.update(SQL, namedParameters, keyHolder);
             Number primaryKey = (Number) keyHolder.getKeys().get("id");
-            contact.setId(primaryKey.longValue());
+            contact.setId(primaryKey.intValue());
             LOGGER.debug("Creating phone numbers for contact: " + contact);
             phoneNumberDAO.createPhoneNumbers(contact.getPhoneNumbers(), contact.getId());
             if (update > 0) return contact;
@@ -83,7 +81,7 @@ public class ContactDaoImpl implements ContactDao {
     }
 
     @Override
-    public Contact find(Long id) throws DaoException {
+    public Contact find(int id) throws DaoException {
         String SQL = "SELECT contacts.id AS contact_id, first_name, last_name, phone_numbers.id AS phone_number_id, type, number" +
                 " FROM contacts LEFT JOIN phone_numbers ON contacts.id = phone_numbers.contact_id WHERE contacts.id = :id";
         try {
@@ -114,7 +112,7 @@ public class ContactDaoImpl implements ContactDao {
     private static class ContactMapper implements RowMapper<Contact> {
         public Contact mapRow(ResultSet rs, int rowNum) throws SQLException {
             Contact res = new Contact();
-            res.setId(rs.getLong("id"));
+            res.setId(rs.getInt("id"));
             res.setFirstName(rs.getString("first_name"));
             res.setLastName(rs.getString("last_name"));
             return res;
@@ -124,10 +122,10 @@ public class ContactDaoImpl implements ContactDao {
     private static class ContactResultSetExtractor implements ResultSetExtractor<List<Contact>> {
         @Override
         public List<Contact> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-            Map<Long, Contact> map = new HashMap<>();
+            Map<Integer, Contact> map = new HashMap<>();
             Contact contact = null;
             while (resultSet.next()) {
-                long id = resultSet.getLong("contact_id");
+                int id = resultSet.getInt("contact_id");
                 LOGGER.debug("contact id: " + resultSet.getLong("contact_id"));
                 if (!map.containsKey(id)) {
                     contact = new Contact();
@@ -140,7 +138,7 @@ public class ContactDaoImpl implements ContactDao {
                     contact = map.get(id);
                 }
                 PhoneNumber phoneNumber = new PhoneNumber();
-                phoneNumber.setId(resultSet.getLong("phone_number_id"));
+                phoneNumber.setId(resultSet.getInt("phone_number_id"));
                 phoneNumber.setNumber(resultSet.getString("number"));
                 phoneNumber.setType(resultSet.getString("type"));
                 contact.addPhoneNumber(phoneNumber);
@@ -156,7 +154,7 @@ public class ContactDaoImpl implements ContactDao {
         ContactDao dao = context.getBean("dao", ContactDao.class);
 //        System.out.println(dao.find(1));
         Contact contact = new Contact();
-        contact.setId(0L);
+        contact.setId(0);
         contact.setFirstName("Leonid");
         contact.setLastName("Kuchma");
         PhoneNumber phoneNumber = new PhoneNumber();

@@ -20,12 +20,12 @@ public class ContactController {
 
     private static final Logger LOGGER = Logger.getLogger(ContactController.class);
 
-    @Autowired
+//    @Autowired
     private ContactService service;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Contact> getContact(@PathVariable("id") long id) {
+    public ResponseEntity<Contact> getContact(@PathVariable("id") int id) {
         LOGGER.debug("Finding contact by id: " + id);
         Contact contact = service.getContactById(id);
         if (contact == null) {

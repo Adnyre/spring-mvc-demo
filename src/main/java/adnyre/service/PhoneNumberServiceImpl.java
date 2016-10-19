@@ -1,7 +1,7 @@
 package adnyre.service;
 
-import adnyre.dao.DaoException;
-import adnyre.dao.PhoneNumberDao;
+import adnyre.exception.DaoException;
+import adnyre.dao.jdbc.PhoneNumberDao;
 import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

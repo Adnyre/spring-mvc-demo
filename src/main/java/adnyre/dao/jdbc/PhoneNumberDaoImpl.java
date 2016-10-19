@@ -1,12 +1,9 @@
 package adnyre.dao.jdbc;
 
-import adnyre.dao.DaoException;
-import adnyre.dao.PhoneNumberDao;
+import adnyre.exception.DaoException;
 import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,8 +13,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,7 +44,7 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(SQL, namedParameters, keyHolder);
             Number primaryKey = (Number) keyHolder.getKeys().get("id");
-            phoneNumber.setId(primaryKey.longValue());
+            phoneNumber.setId(primaryKey.intValue());
             return phoneNumber;
         } catch (DataAccessException e) {
             LOGGER.error("DataAccessException in PhoneNumberDaoImpl::createPhoneNumber", e);
@@ -88,7 +83,7 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
     @Override
     public List<PhoneNumber> updatePhoneNumbers(List<PhoneNumber> phoneNumbers, long contactId) throws DaoException {
         try {
-            List<Long> phoneNumberIdsInMemory = phoneNumbers.stream().map(PhoneNumber::getId).collect(Collectors.toList());
+            List<Integer> phoneNumberIdsInMemory = phoneNumbers.stream().map(PhoneNumber::getId).collect(Collectors.toList());
             String query = "SELECT id FROM phone_numbers WHERE contact_id = :contact_id";
             Map<String, Long> namedParameters = Collections.singletonMap("contact_id", contactId);
             List<Long> persistedPhoneNumberIds = jdbcTemplate.query(query, namedParameters, (resultSet, i) -> resultSet.getLong("id"));
@@ -188,7 +183,7 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
     private static class PhoneNumberMapper implements RowMapper<PhoneNumber> {
         public PhoneNumber mapRow(ResultSet rs, int rowNum) throws SQLException {
             PhoneNumber res = new PhoneNumber();
-            res.setId(rs.getLong("id"));
+            res.setId(rs.getInt("id"));
             res.setType(rs.getString("type"));
             res.setNumber(rs.getString("number"));
             return res;
@@ -200,7 +195,7 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
         PhoneNumberDao dao = context.getBean("phoneNumberDao", PhoneNumberDao.class);
 //        System.out.println(dao.find(1));
         PhoneNumber pn = new PhoneNumber();
-        pn.setId(5L);
+        pn.setId(5);
         pn.setType("home");
         pn.setNumber("002-999-000-11");
         System.out.println(dao.getAllPhoneNumbers(1));

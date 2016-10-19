@@ -5,11 +5,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "phone_numbers", schema = "public", catalog = "spring_mvc_demo_db")
 public class PhoneNumber implements BaseEntity {
-    private long id;
+    private int id;
     private String number;
     private String type;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="contact_id", referencedColumnName="id")
     public Contact getContact() {
         return contact;
@@ -24,13 +24,11 @@ public class PhoneNumber implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @Override
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    @Override
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

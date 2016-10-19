@@ -1,8 +1,8 @@
-package adnyre.dao;
+package adnyre.dao.jdbc;
 
+import adnyre.exception.DaoException;
 import adnyre.model.PhoneNumber;
 
-import java.io.Serializable;
 import java.util.List;
 
 public interface PhoneNumberDao {

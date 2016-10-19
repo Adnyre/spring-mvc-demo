@@ -17,13 +17,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "contacts", schema = "public", catalog = "spring_mvc_demo_db")
-public class Contact implements BaseEntity{
-    private long id;
+public class Contact implements BaseEntity {
+    private int id;
     private String firstName;
     private String lastName;
     private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "contact", cascade = {CascadeType.MERGE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "contact", orphanRemoval = true)
     public List<PhoneNumber> getPhoneNumbers() {
         return phoneNumbers;
     }
@@ -43,13 +43,11 @@ public class Contact implements BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @Override
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    @Override
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

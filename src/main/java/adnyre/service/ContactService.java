@@ -11,7 +11,7 @@ public interface ContactService {
 
     void deleteContact(Contact contact) throws ServiceException;
 
-    Contact getContactById(long id) throws ServiceException;
+    Contact getContactById(int id) throws ServiceException;
 
     List<Contact> getAllContacts() throws ServiceException;
 }

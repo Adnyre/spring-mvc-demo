@@ -1,7 +1,7 @@
 package adnyre.service;
 
-import adnyre.dao.ContactDao;
-import adnyre.dao.DaoException;
+import adnyre.dao.jdbc.ContactDao;
+import adnyre.exception.DaoException;
 import adnyre.model.Contact;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Contact getContactById(long id) throws ServiceException {
+    public Contact getContactById(int id) throws ServiceException {
         try {
             LOGGER.debug("Getting contact by id: " + id);
             return dao.find(id);

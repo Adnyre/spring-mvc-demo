@@ -70,4 +70,5 @@
 
     <bean id="contactDao" class="adnyre.dao.hibernate.ContactDaoImplHibernate" />
 
+
 </beans>
