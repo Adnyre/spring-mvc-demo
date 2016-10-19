@@ -69,6 +69,6 @@
 
 
     <bean id="contactDao" class="adnyre.dao.hibernate.ContactDaoImplHibernate" />
-
+    <bean id="phoneNumberDao" class="adnyre.dao.hibernate.PhoneNumberDaoImplHibernate" />
 
 </beans>

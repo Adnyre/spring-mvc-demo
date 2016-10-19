@@ -2,6 +2,8 @@ package adnyre.dao.hibernate;
 
 import adnyre.exception.DaoException;
 import adnyre.model.BaseEntity;
+import adnyre.model.Contact;
+import adnyre.model.PhoneNumber;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -39,9 +41,8 @@ public class GenericDaoImplHibernate<T extends BaseEntity>
 
     @Override
     public T create(T t) throws DaoException {
-        if(find(t.getId()) == null) {
-            this.entityManager.persist(t);
-            return t;
+        if (find(t.getId()) == null) {
+            return this.entityManager.merge(t);
         }
         return null;
     }
@@ -83,19 +84,19 @@ public class GenericDaoImplHibernate<T extends BaseEntity>
     public static void main(String[] args) throws DaoException {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-        ContactDaoImplHibernate cdao = (ContactDaoImplHibernate) context.getBean("contactDao");
-//        ContactDaoImplHibernate pndao = (ContactDaoImplHibernate) context.getBean("phoneNumberDao");
+//        ContactDaoImplHibernate cdao = context.getBean(ContactDaoImplHibernate.class);
+        GenericDao<PhoneNumber> pndao = context.getBean(PhoneNumberDaoImplHibernate.class);
 
 //        Contact contact = new Contact();
-//        contact.setId(2);
-//        contact.setFirstName("iii");
-//        contact.setLastName("iii");
+//        contact.setId(10);
+//        contact.setFirstName("bbb");
+//        contact.setLastName("bbb");
 
 //        System.out.println(dao.update(contact));
 //        System.out.println(dao.findAll());
 //        dao.delete(contact);
-
-        System.out.println(cdao.findAll());
+//        System.out.println(cdao.create(contact));
+        System.out.println(pndao.findAll());
     }
 
 }

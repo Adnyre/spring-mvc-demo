@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Repository("contactDao")
+@Repository // ("contactDao")
 @Profile("hibernate")
 @Transactional
 public class ContactDaoImplHibernate extends GenericDaoImplHibernate<Contact>{
