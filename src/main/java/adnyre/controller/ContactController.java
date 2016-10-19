@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
+
 @Controller
 @RequestMapping("/contact")
 public class ContactController {
@@ -27,35 +30,30 @@ public class ContactController {
         Contact contact = service.getContactById(id);
         if (contact == null) {
             LOGGER.debug("No contact found with id: " + id);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(NOT_FOUND);
         }
-        return new ResponseEntity<>(contact, HttpStatus.OK);
+        return new ResponseEntity<>(contact, OK);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<Contact>> getAllContacts() {
         LOGGER.debug("Finding all contacts");
-        return new ResponseEntity<>(service.getAllContacts(), HttpStatus.OK);
+        return new ResponseEntity<>(service.getAllContacts(), OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Contact> createContact(@RequestBody Contact contact) {
         LOGGER.debug("Trying to save contact: " + contact);
-        return new ResponseEntity<>(service.createContact(contact), HttpStatus.OK);
+        return new ResponseEntity<>(service.createContact(contact), OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<Contact> updateContact(@RequestBody Contact contact) {
         LOGGER.debug("Trying to update contact: " + contact);
-        contact = service.updateContact(contact);
-        if (contact == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(service.updateContact(contact), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(service.updateContact(contact), OK);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, produces = "text/html")
@@ -63,9 +61,9 @@ public class ContactController {
     public ResponseEntity<String> deleteContact(@RequestBody Contact contact) {
         LOGGER.debug("Trying to delete contact: " + contact);
         if (service.deleteContact(contact))
-            return new ResponseEntity<>("<h2>contact deleted</h2>", HttpStatus.OK);
+            return new ResponseEntity<>("<h2>contact deleted</h2>", OK);
         else
             LOGGER.debug("Unable to delete contact: " + contact);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(NOT_FOUND);
     }
 }

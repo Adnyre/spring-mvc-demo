@@ -1,9 +1,12 @@
-package adnyre.dao;
+package adnyre.dao.jdbc;
 
+import adnyre.dao.DaoException;
+import adnyre.dao.PhoneNumberDao;
 import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,17 +17,21 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
-@Repository("phoneNumberDao")
+//@Repository("phoneNumberDao")
+//@Profile("jdbc")
+//@Transactional
 public class PhoneNumberDaoImpl implements PhoneNumberDao {
 
     private static final Logger LOGGER = Logger.getLogger(PhoneNumberDaoImpl.class);
 
-    @Autowired
+//    @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
@@ -77,36 +84,50 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
         }
     }
 
-//TODO!!!
+    //TODO!!!
     @Override
     public List<PhoneNumber> updatePhoneNumbers(List<PhoneNumber> phoneNumbers, long contactId) throws DaoException {
         try {
-            List<PhoneNumber> persisted = getAllPhoneNumbers(contactId);
-            for (PhoneNumber phoneNumber : phoneNumbers) {
-                boolean foundInPersisted = false;
-                for (PhoneNumber persistedPhoneNumber : persisted) {
-                    if (phoneNumber.getId() == persistedPhoneNumber.getId()) {
-                        if (!phoneNumber.equals(persistedPhoneNumber)) {
-                            updatePhoneNumber(phoneNumber);
-                        }
-                        foundInPersisted = true;
-                    }
-                }
-                if (!foundInPersisted) {
-                    createPhoneNumber(phoneNumber, phoneNumber.getId());
-                }
+            List<Long> phoneNumberIdsInMemory = phoneNumbers.stream().map(PhoneNumber::getId).collect(Collectors.toList());
+            String query = "SELECT id FROM phone_numbers WHERE contact_id = :contact_id";
+            Map<String, Long> namedParameters = Collections.singletonMap("contact_id", contactId);
+            List<Long> persistedPhoneNumberIds = jdbcTemplate.query(query, namedParameters, (resultSet, i) -> resultSet.getLong("id"));
+            //TODO!!
+            StringBuilder sb = new StringBuilder("(");
+            for (long phoneNumberId : phoneNumberIdsInMemory) {
+                sb.append(phoneNumberId + ",");
             }
-            for (PhoneNumber persistedPhoneNumber : persisted) {
-                boolean foundInMemory = false;
-                for (PhoneNumber phoneNumber : phoneNumbers) {
-                    if (phoneNumber.getId() == persistedPhoneNumber.getId()) {
-                        foundInMemory = true;
-                    }
-                }
-                if (!foundInMemory) {
-                    deletePhoneNumber(persistedPhoneNumber);
-                }
+
+            sb.delete(sb.length() - 1, sb.length()).append(")");
+            String delete = "DELETE FROM phone_numbers WHERE contactId=:contactId AND NOT id IN " + sb.toString();
+            namedParameters = Collections.singletonMap("contactId", contactId);
+            jdbcTemplate.update(delete, namedParameters);
+
+            String insert = "INSERT INTO phone_numbers (contact_id, type, number) VALUES (:contact_id, :type, :number)";
+            List<PhoneNumber> phoneNumbersToAdd = phoneNumbers.stream()
+                    .filter(x -> phoneNumberIdsInMemory.contains(x.getId()) && !persistedPhoneNumberIds.contains(x.getId()))
+                    .collect(Collectors.toList());
+            Map<String, Object>[] batchValues = (Map<String, Object>[]) new Map[phoneNumbersToAdd.size()];
+            for (int i = 0; i < phoneNumbersToAdd.size(); i++) {
+                batchValues[i] = new HashMap<>();
+                batchValues[i].put("contact_id", contactId);
+                batchValues[i].put("type", phoneNumbersToAdd.get(i).getType());
+                batchValues[i].put("number", phoneNumbersToAdd.get(i).getNumber());
             }
+            jdbcTemplate.batchUpdate(insert, batchValues);
+
+            String update = "UPDATE phone_numbers SET type=:type, number=:number WHERE id=:id";
+            List<PhoneNumber> phoneNumbersToUpdate = phoneNumbers.stream()
+                    .filter(x -> phoneNumberIdsInMemory.contains(x.getId()) && persistedPhoneNumberIds.contains(x.getId()))
+                    .collect(Collectors.toList());
+            batchValues = (Map<String, Object>[]) new Map[phoneNumbersToUpdate.size()];
+            for (int i = 0; i < phoneNumbersToUpdate.size(); i++) {
+                batchValues[i] = new HashMap<>();
+                batchValues[i].put("id", phoneNumbersToUpdate.get(i).getId());
+                batchValues[i].put("type", phoneNumbersToUpdate.get(i).getType());
+                batchValues[i].put("number", phoneNumbersToUpdate.get(i).getNumber());
+            }
+            jdbcTemplate.batchUpdate(update, batchValues);
             return phoneNumbers;
         } catch (Exception e) {
             LOGGER.error("DataAccessException in PhoneNumberDaoImpl::updatePhoneNumbers", e);

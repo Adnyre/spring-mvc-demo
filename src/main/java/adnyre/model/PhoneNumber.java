@@ -1,10 +1,33 @@
 package adnyre.model;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "phone_numbers", schema = "public", catalog = "spring_mvc_demo_db")
 public class PhoneNumber {
     private long id;
     private String number;
     private String type;
 
+    @ManyToOne()
+    @JoinColumn(name="contact_id", referencedColumnName="id")
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
+
+    private Contact contact;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     public long getId() {
         return id;
     }
@@ -13,12 +36,24 @@ public class PhoneNumber {
         this.id = id;
     }
 
+    @Basic
+    @Column(name = "number")
     public String getNumber() {
         return number;
     }
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    @Basic
+    @Column(name = "type")
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
@@ -30,11 +65,24 @@ public class PhoneNumber {
                 '}';
     }
 
-    public String getType() {
-        return type;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PhoneNumber that = (PhoneNumber) o;
+
+        if (id != that.id) return false;
+        if (number != null ? !number.equals(that.number) : that.number != null) return false;
+        return type != null ? type.equals(that.type) : that.type == null;
+
     }
 
-    public void setType(String type) {
-        this.type = type;
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (number != null ? number.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
     }
 }

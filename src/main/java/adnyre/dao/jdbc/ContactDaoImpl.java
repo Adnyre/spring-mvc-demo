@@ -1,10 +1,14 @@
-package adnyre.dao;
+package adnyre.dao.jdbc;
 
+import adnyre.dao.ContactDao;
+import adnyre.dao.DaoException;
+import adnyre.dao.PhoneNumberDao;
 import adnyre.model.Contact;
 import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -21,16 +25,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-@Repository("contactDao")
-@Transactional
+//@Repository("contactDao")
+//@Profile("jdbc")
+//@Transactional
 public class ContactDaoImpl implements ContactDao {
 
     private static final Logger LOGGER = Logger.getLogger(ContactDaoImpl.class);
 
-    @Autowired
+//    @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Autowired
+//    @Autowired
     private PhoneNumberDao phoneNumberDAO;
 
     @Override

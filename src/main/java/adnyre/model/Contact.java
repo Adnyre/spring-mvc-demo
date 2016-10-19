@@ -1,14 +1,20 @@
 package adnyre.model;
 
+import org.hibernate.annotations.Cascade;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "contacts", schema = "public", catalog = "spring_mvc_demo_db")
 public class Contact {
     private long id;
     private String firstName;
     private String lastName;
     private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "contact")
     public List<PhoneNumber> getPhoneNumbers() {
         return phoneNumbers;
     }
@@ -25,6 +31,9 @@ public class Contact {
         phoneNumbers.remove(phoneNumber);
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     public long getId() {
         return id;
     }
@@ -33,6 +42,8 @@ public class Contact {
         this.id = id;
     }
 
+    @Basic
+    @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
@@ -41,6 +52,8 @@ public class Contact {
         this.firstName = firstName;
     }
 
+    @Basic
+    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
@@ -57,5 +70,28 @@ public class Contact {
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumbers=" + phoneNumbers +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Contact contact = (Contact) o;
+
+        if (id != contact.id) return false;
+        if (firstName != null ? !firstName.equals(contact.firstName) : contact.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(contact.lastName) : contact.lastName != null) return false;
+        return phoneNumbers != null ? phoneNumbers.equals(contact.phoneNumbers) : contact.phoneNumbers == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (phoneNumbers != null ? phoneNumbers.hashCode() : 0);
+        return result;
     }
 }
