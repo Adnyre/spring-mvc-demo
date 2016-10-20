@@ -1,6 +1,9 @@
 package adnyre.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.Basic;
@@ -25,6 +28,7 @@ public class Contact implements BaseEntity {
     private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "contact", orphanRemoval = true)
+    @JsonManagedReference
     public List<PhoneNumber> getPhoneNumbers() {
         return phoneNumbers;
     }
