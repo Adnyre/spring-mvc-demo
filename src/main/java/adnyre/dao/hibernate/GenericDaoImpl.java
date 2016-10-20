@@ -1,10 +1,7 @@
 package adnyre.dao.hibernate;
 
-import adnyre.dao.GenericDao;
-import adnyre.dao.jdbc.*;
 import adnyre.exception.DaoException;
 import adnyre.model.BaseEntity;
-import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
@@ -20,7 +17,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @Repository("genericDao")
@@ -60,7 +56,7 @@ public class GenericDaoImpl<T extends BaseEntity>
     }
 
     @Override
-    public void delete(T t) throws DaoException{
+    public void delete(T t) throws DaoException {
         t = this.entityManager.merge(t);
         this.entityManager.remove(t);
     }

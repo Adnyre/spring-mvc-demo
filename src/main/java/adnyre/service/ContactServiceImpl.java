@@ -1,10 +1,11 @@
 package adnyre.service;
 
-import adnyre.dao.ContactDao;
+import adnyre.dao.hibernate.GenericDao;
 import adnyre.exception.DaoException;
 import adnyre.model.Contact;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ public class ContactServiceImpl implements ContactService {
     private static final Logger LOGGER = Logger.getLogger(ContactServiceImpl.class);
 
     @Autowired
-    private ContactDao dao;
+    @Qualifier("contactDao")
+    private GenericDao<Contact> dao;
 
     @Override
     public Contact createContact(Contact contact) throws ServiceException {

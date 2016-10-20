@@ -1,5 +1,6 @@
-package adnyre.dao;
+package adnyre.dao.jdbc;
 
+import adnyre.dao.hibernate.GenericDao;
 import adnyre.exception.DaoException;
 import adnyre.model.PhoneNumber;
 
@@ -11,17 +12,17 @@ public interface PhoneNumberDao extends GenericDao<PhoneNumber> {
 
     List<PhoneNumber> createAll(List<PhoneNumber> phoneNumbers, int contactId) throws DaoException;
 
-//    PhoneNumber update(PhoneNumber phoneNumber) throws DaoException;
+    PhoneNumber update(PhoneNumber phoneNumber) throws DaoException;
 
     List<PhoneNumber> updateAll(List<PhoneNumber> phoneNumbers, int contactId) throws DaoException;
 
-//    void delete(PhoneNumber phoneNumber) throws DaoException;
+    void delete(PhoneNumber phoneNumber) throws DaoException;
 
-//    PhoneNumber find(int id) throws DaoException;
+    PhoneNumber find(int id) throws DaoException;
 
     List<PhoneNumber> findAll(int contactId) throws DaoException;
 
-//    List<PhoneNumber> findAll() throws DaoException;
+    List<PhoneNumber> findAll() throws DaoException;
 
     void deleteAll(int contactId) throws DaoException;
 

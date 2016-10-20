@@ -1,6 +1,6 @@
 package adnyre.dao.jdbc;
 
-import adnyre.dao.PhoneNumberDao;
+import adnyre.dao.jdbc.PhoneNumberDao;
 import adnyre.exception.DaoException;
 import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
@@ -191,7 +191,7 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
         }
     }
 
-    //TODO
+
     @Override
     public PhoneNumber findByNumberType(String number, String type) {
         throw new UnsupportedOperationException();

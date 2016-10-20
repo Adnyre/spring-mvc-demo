@@ -1,7 +1,7 @@
 package adnyre.dao.jdbc;
 
-import adnyre.dao.ContactDao;
-import adnyre.dao.PhoneNumberDao;
+import adnyre.dao.jdbc.ContactDao;
+import adnyre.dao.jdbc.PhoneNumberDao;
 import adnyre.exception.DaoException;
 import adnyre.model.Contact;
 import adnyre.model.PhoneNumber;
