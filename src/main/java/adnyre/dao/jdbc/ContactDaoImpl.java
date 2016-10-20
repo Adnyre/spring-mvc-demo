@@ -1,5 +1,7 @@
 package adnyre.dao.jdbc;
 
+import adnyre.dao.ContactDao;
+import adnyre.dao.PhoneNumberDao;
 import adnyre.exception.DaoException;
 import adnyre.model.Contact;
 import adnyre.model.PhoneNumber;
@@ -43,7 +45,7 @@ public class ContactDaoImpl implements ContactDao {
             Number primaryKey = (Number) keyHolder.getKeys().get("id");
             contact.setId(primaryKey.intValue());
             LOGGER.debug("Creating phone numbers for contact: " + contact);
-            phoneNumberDAO.createPhoneNumbers(contact.getPhoneNumbers(), contact.getId());
+            phoneNumberDAO.createAll(contact.getPhoneNumbers(), contact.getId());
             if (update > 0) return contact;
             else return null;
         } catch (DataAccessException e) {
@@ -58,7 +60,7 @@ public class ContactDaoImpl implements ContactDao {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(contact);
         try {
             int update = jdbcTemplate.update(SQL, namedParameters);
-            phoneNumberDAO.updatePhoneNumbers(contact.getPhoneNumbers(), contact.getId());
+            phoneNumberDAO.updateAll(contact.getPhoneNumbers(), contact.getId());
             if (update > 0) return contact;
             else return null;
         } catch (DataAccessException e) {
@@ -72,7 +74,7 @@ public class ContactDaoImpl implements ContactDao {
         String SQL = "DELETE FROM contacts WHERE id = :id";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(contact);
         try {
-            phoneNumberDAO.deleteAllPhoneNumbers((long) namedParameters.getValue("id"));
+            phoneNumberDAO.deleteAll((int) namedParameters.getValue("id"));
             jdbcTemplate.update(SQL, namedParameters);
         } catch (DataAccessException e) {
             LOGGER.error("DataAccessException in ContactDaoImpl::delete", e);

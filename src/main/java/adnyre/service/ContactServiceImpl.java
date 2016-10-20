@@ -1,10 +1,12 @@
 package adnyre.service;
 
-import adnyre.dao.jdbc.ContactDao;
+import adnyre.dao.ContactDao;
 import adnyre.exception.DaoException;
 import adnyre.model.Contact;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,5 +72,11 @@ public class ContactServiceImpl implements ContactService {
             LOGGER.error("DaoException in ContactServiceImpl::findAll", e);
             throw new ServiceException(e);
         }
+    }
+
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+        ContactService service = context.getBean(ContactService.class, "contactService");
+        System.out.println(service.getAllContacts());
     }
 }

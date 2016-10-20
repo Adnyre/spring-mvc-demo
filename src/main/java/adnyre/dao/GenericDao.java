@@ -1,4 +1,4 @@
-package adnyre.dao.hibernate;
+package adnyre.dao;
 
 import adnyre.exception.DaoException;
 

@@ -23,5 +23,5 @@
         </property>
     </bean>
 
-    <!--<import resource="application-context.xml"/>-->
+    <import resource="classpath*:application-context.xml"/>
 </beans>

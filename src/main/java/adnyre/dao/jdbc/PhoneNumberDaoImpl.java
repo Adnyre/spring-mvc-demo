@@ -1,5 +1,6 @@
 package adnyre.dao.jdbc;
 
+import adnyre.dao.PhoneNumberDao;
 import adnyre.exception.DaoException;
 import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
@@ -30,7 +31,7 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public PhoneNumber createPhoneNumber(PhoneNumber phoneNumber, long contactId) throws DaoException {
+    public PhoneNumber create(PhoneNumber phoneNumber, int contactId) throws DaoException {
         String SQL = "INSERT INTO phone_numbers (contact_id, type, number) VALUES (:contact_id, :type, :number)";
         SqlParameterSource namedParameters = new MapSqlParameterSource(
                 new HashMap<String, Object>() {
@@ -47,45 +48,45 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
             phoneNumber.setId(primaryKey.intValue());
             return phoneNumber;
         } catch (DataAccessException e) {
-            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::createPhoneNumber", e);
+            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::create", e);
             throw new DaoException(e);
         }
     }
 
     @Override
-    public List<PhoneNumber> createPhoneNumbers(List<PhoneNumber> phoneNumbers, long contactId) throws DaoException {
+    public List<PhoneNumber> createAll(List<PhoneNumber> phoneNumbers, int contactId) throws DaoException {
         //TODO!!!
         try {
             for (PhoneNumber phoneNumber : phoneNumbers) {
-                createPhoneNumber(phoneNumber, contactId);
+                create(phoneNumber, contactId);
             }
             return phoneNumbers;
         } catch (Exception e) {
-            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::createPhoneNumbers", e);
+            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::createAll", e);
             throw new DaoException(e);
         }
     }
 
     @Override
-    public PhoneNumber updatePhoneNumber(PhoneNumber phoneNumber) throws DaoException {
+    public PhoneNumber update(PhoneNumber phoneNumber) throws DaoException {
         String SQL = "UPDATE phone_numbers SET type=:type, number=:number WHERE id=:id";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(phoneNumber);
         try {
             jdbcTemplate.update(SQL, namedParameters);
             return phoneNumber;
         } catch (DataAccessException e) {
-            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::updatePhoneNumber", e);
+            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::update", e);
             throw new DaoException(e);
         }
     }
 
     //TODO!!!
     @Override
-    public List<PhoneNumber> updatePhoneNumbers(List<PhoneNumber> phoneNumbers, long contactId) throws DaoException {
+    public List<PhoneNumber> updateAll(List<PhoneNumber> phoneNumbers, int contactId) throws DaoException {
         try {
             List<Integer> phoneNumberIdsInMemory = phoneNumbers.stream().map(PhoneNumber::getId).collect(Collectors.toList());
             String query = "SELECT id FROM phone_numbers WHERE contact_id = :contact_id";
-            Map<String, Long> namedParameters = Collections.singletonMap("contact_id", contactId);
+            Map<String, Integer> namedParameters = Collections.singletonMap("contact_id", contactId);
             List<Long> persistedPhoneNumberIds = jdbcTemplate.query(query, namedParameters, (resultSet, i) -> resultSet.getLong("id"));
             //TODO!!
             StringBuilder sb = new StringBuilder("(");
@@ -125,59 +126,75 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
             jdbcTemplate.batchUpdate(update, batchValues);
             return phoneNumbers;
         } catch (Exception e) {
-            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::updatePhoneNumbers", e);
+            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::updateAll", e);
             throw new DaoException(e);
         }
     }
 
     @Override
-    public boolean deletePhoneNumber(PhoneNumber phoneNumber) throws DaoException {
+    public void delete(PhoneNumber phoneNumber) throws DaoException {
         String SQL = "DELETE FROM phone_numbers WHERE id=:id";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(phoneNumber);
         try {
-            return jdbcTemplate.update(SQL, namedParameters) > 0;
+            jdbcTemplate.update(SQL, namedParameters);
         } catch (DataAccessException e) {
-            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::deletePhoneNumber", e);
+            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::delete", e);
             throw new DaoException(e);
         }
     }
 
     @Override
-    public PhoneNumber getPhoneNumberById(long id) throws DaoException {
+    public List<PhoneNumber> findAll() throws DaoException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public PhoneNumber create(PhoneNumber phoneNumber) throws DaoException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public PhoneNumber find(int id) throws DaoException {
         String SQL = "SELECT * FROM phone_numbers WHERE id = :id";
-        Map<String, Long> namedParameters = Collections.singletonMap("id", id);
+        Map<String, Integer> namedParameters = Collections.singletonMap("id", id);
         try {
             return jdbcTemplate.queryForObject(SQL, namedParameters, new PhoneNumberMapper());
         } catch (DataAccessException e) {
-            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::getPhoneNumberById", e);
+            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::find", e);
             throw new DaoException(e);
         }
     }
 
     @Override
-    public List<PhoneNumber> getAllPhoneNumbers(long contactId) throws DaoException {
+    public List<PhoneNumber> findAll(int contactId) throws DaoException {
         String SQL = "SELECT * FROM phone_numbers WHERE contact_id = :contact_id";
-        Map<String, Long> namedParameters = Collections.singletonMap("contact_id", contactId);
+        Map<String, Integer> namedParameters = Collections.singletonMap("contact_id", contactId);
         List<PhoneNumber> phoneNumbers = null;
         try {
             phoneNumbers = jdbcTemplate.query(SQL, namedParameters, new PhoneNumberMapper());
         } catch (DataAccessException e) {
-            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::getAllPhoneNumbers", e);
+            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::findAll", e);
             throw new DaoException(e);
         }
         return phoneNumbers;
     }
 
     @Override
-    public void deleteAllPhoneNumbers(long contactId) throws DaoException {
+    public void deleteAll(int contactId) throws DaoException {
         String SQL = "DELETE FROM phone_numbers WHERE contact_id = :contact_id";
-        Map<String, Long> namedParameters = Collections.singletonMap("contact_id", contactId);
+        Map<String, Integer> namedParameters = Collections.singletonMap("contact_id", contactId);
         try {
             jdbcTemplate.update(SQL, namedParameters);
         } catch (DataAccessException e) {
-            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::getAllPhoneNumbers", e);
+            LOGGER.error("DataAccessException in PhoneNumberDaoImpl::findAll", e);
             throw new DaoException(e);
         }
+    }
+
+    //TODO
+    @Override
+    public PhoneNumber findByNumberType(String number, String type) {
+        throw new UnsupportedOperationException();
     }
 
     private static class PhoneNumberMapper implements RowMapper<PhoneNumber> {
@@ -198,7 +215,7 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
         pn.setId(5);
         pn.setType("home");
         pn.setNumber("002-999-000-11");
-        System.out.println(dao.getAllPhoneNumbers(1));
+        System.out.println(dao.findAll(1));
 //        System.out.println(dao.delete(contact));
 //        System.out.println(dao.findAll());
     }

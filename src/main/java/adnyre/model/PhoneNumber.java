@@ -1,5 +1,7 @@
 package adnyre.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,8 +10,10 @@ public class PhoneNumber implements BaseEntity {
     private int id;
     private String number;
     private String type;
+    private Contact contact;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @JsonIgnore
+    @ManyToOne // (cascade = {CascadeType.ALL})
     @JoinColumn(name="contact_id", referencedColumnName="id")
     public Contact getContact() {
         return contact;
@@ -19,7 +23,6 @@ public class PhoneNumber implements BaseEntity {
         this.contact = contact;
     }
 
-    private Contact contact;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

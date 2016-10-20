@@ -1,12 +1,15 @@
 package adnyre.dao.hibernate;
 
+import adnyre.dao.GenericDao;
+import adnyre.dao.jdbc.*;
 import adnyre.exception.DaoException;
 import adnyre.model.BaseEntity;
-import adnyre.model.Contact;
 import adnyre.model.PhoneNumber;
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,17 +26,16 @@ import java.util.List;
 @Repository("genericDao")
 @Profile("hibernate")
 @Transactional
-public class GenericDaoImplHibernate<T extends BaseEntity>
+public class GenericDaoImpl<T extends BaseEntity>
         implements GenericDao<T> {
+
+    private static final Logger LOGGER = Logger.getLogger(GenericDaoImpl.class);
 
     protected Class<T> entityClass;
 
     @SuppressWarnings("unchecked")
-    public GenericDaoImplHibernate() {
-        ParameterizedType genericSuperclass = (ParameterizedType) getClass()
-                .getGenericSuperclass();
-        this.entityClass = (Class<T>) genericSuperclass
-                .getActualTypeArguments()[0];
+    public GenericDaoImpl() {
+        this.entityClass = (Class<T>) GenericTypeResolver.resolveTypeArgument(getClass(), GenericDaoImpl.class);
     }
 
     @PersistenceContext
@@ -66,7 +68,8 @@ public class GenericDaoImplHibernate<T extends BaseEntity>
     @Override
     @SuppressWarnings("unchecked")
     public List<T> findAll() throws DaoException {
-        String hql = "FROM " + entityClass.getSimpleName();
+        String hql = String.format("FROM %s", entityClass.getName());
+        LOGGER.debug(String.format("findAll HQL query for class %s: %s", entityClass, hql));
         Query query = entityManager.createQuery(hql, entityClass);
         return query.getResultList();
     }
@@ -85,7 +88,7 @@ public class GenericDaoImplHibernate<T extends BaseEntity>
 
         ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 //        ContactDaoImplHibernate cdao = context.getBean(ContactDaoImplHibernate.class);
-        GenericDao<PhoneNumber> pndao = context.getBean(PhoneNumberDaoImplHibernate.class);
+        PhoneNumberDaoImpl pndao = context.getBean(PhoneNumberDaoImpl.class, "phoneNumberDao");
 
 //        Contact contact = new Contact();
 //        contact.setId(10);
@@ -96,7 +99,10 @@ public class GenericDaoImplHibernate<T extends BaseEntity>
 //        System.out.println(dao.findAll());
 //        dao.delete(contact);
 //        System.out.println(cdao.create(contact));
-        System.out.println(pndao.findAll());
+        LOGGER.debug(EntityManager.class.getProtectionDomain()
+                .getCodeSource()
+                .getLocation());
+        System.out.println(pndao.findByNumberType("024-111-11-11", "home"));
     }
 
 }
