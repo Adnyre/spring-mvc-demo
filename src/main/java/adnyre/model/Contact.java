@@ -14,7 +14,7 @@ public class Contact implements BaseEntity {
     private String lastName;
     private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "contact", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "contact", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonManagedReference
     public List<PhoneNumber> getPhoneNumbers() {
         return phoneNumbers;
