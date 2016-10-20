@@ -32,6 +32,8 @@ public class PhoneNumberServiceImpl implements PhoneNumberService {
     @Override
     public PhoneNumber updatePhoneNumber(PhoneNumber phoneNumber) throws ServiceException {
         try {
+            PhoneNumber phoneNumberById = getPhoneNumberById(phoneNumber.getId());
+            phoneNumber.setContact(phoneNumberById.getContact());
             return dao.update(phoneNumber);
         } catch (DaoException e) {
             LOGGER.error("DaoException in PhoneNumberServiceImpl::createOrUpdatePhoneNumber", e);

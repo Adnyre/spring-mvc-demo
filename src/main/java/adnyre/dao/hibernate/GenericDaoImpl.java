@@ -13,10 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Repository("genericDao")
@@ -67,16 +63,6 @@ public class GenericDaoImpl<T extends BaseEntity>
         String hql = String.format("FROM %s", entityClass.getName());
         LOGGER.debug(String.format("findAll HQL query for class %s: %s", entityClass, hql));
         Query query = entityManager.createQuery(hql, entityClass);
-        return query.getResultList();
-    }
-
-    //criteria
-    public List<T> findAll2() throws DaoException {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> criteriaQuery = builder.createQuery(entityClass);
-        Root<T> c = criteriaQuery.from(entityClass);
-        criteriaQuery.select(c);
-        TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList();
     }
 
