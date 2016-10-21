@@ -2,6 +2,7 @@ package adnyre.service;
 
 import adnyre.dao.hibernate.GenericDao;
 import adnyre.exception.DaoException;
+import adnyre.model.Contact;
 import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

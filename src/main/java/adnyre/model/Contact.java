@@ -13,8 +13,8 @@ public class Contact implements BaseEntity {
     private String firstName;
     private String lastName;
     private List<PhoneNumber> phoneNumbers = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "contact", orphanRemoval = true, cascade = CascadeType.ALL)
+//CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.MERGE
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "contact", cascade = {CascadeType.MERGE}, orphanRemoval = true) //
     @JsonManagedReference
     public List<PhoneNumber> getPhoneNumbers() {
         return phoneNumbers;
