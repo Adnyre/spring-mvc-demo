@@ -3,6 +3,7 @@ package adnyre.service;
 import adnyre.dao.hibernate.GenericDao;
 import adnyre.exception.DaoException;
 import adnyre.model.Contact;
+import adnyre.pojo.Country;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,6 +21,8 @@ public class ContactServiceImpl implements ContactService {
     @Autowired
     @Qualifier("contactDao")
     private GenericDao<Contact> dao;
+
+    private CountryService countryService;
 
     @Override
     public Contact createContact(Contact contact) throws ServiceException {
@@ -55,10 +58,18 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Contact getContactById(int id) throws ServiceException {
+    public ContactDto getContactById(int id) throws ServiceException {
         try {
             LOGGER.debug("Getting contact by id: " + id);
-            return dao.find(id);
+            Contact contact = dao.find(id);
+            String countryCode = contact.getCountryCode();
+            Country country = countryService.getCountryByCode(countryCode);
+            return new ContactDto();
+
+
+
+            //TODO
+            return null;
         } catch (DaoException e) {
             LOGGER.error("DaoException in ContactServiceImpl::find", e);
             throw new ServiceException(e);

@@ -13,6 +13,8 @@ public class Contact implements BaseEntity {
     private String firstName;
     private String lastName;
     private List<PhoneNumber> phoneNumbers = new ArrayList<>();
+    private String countryCode;
+
 //CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.MERGE
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "contact", cascade = {CascadeType.MERGE}, orphanRemoval = true) //
     @JsonManagedReference
@@ -61,6 +63,16 @@ public class Contact implements BaseEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Basic
+    @Column(name = "country_code")
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 
     @Override
