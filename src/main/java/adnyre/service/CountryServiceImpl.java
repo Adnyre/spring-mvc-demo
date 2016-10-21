@@ -38,7 +38,7 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public boolean checkIfCodeExists(String code) {
         try {
-            HttpGet request = new HttpGet(BASE_URL + "alpha" + code);
+            HttpGet request = new HttpGet(BASE_URL + "alpha/" + code);
             HttpResponse response = client.execute(request);
             return response.getStatusLine().getStatusCode() == 200;
         } catch (IOException e) {
@@ -51,7 +51,8 @@ public class CountryServiceImpl implements CountryService {
     public Country getCountryByCode(String code) {
         try {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            HttpGet request = new HttpGet(BASE_URL + "alpha" + code);
+            HttpGet request = new HttpGet(BASE_URL + "alpha/" + code);
+            LOGGER.debug(request);
             HttpResponse response = client.execute(request);
             if (response.getStatusLine().getStatusCode() == 200) {
                 return mapper.readValue(response.getEntity().getContent(), Country.class);
