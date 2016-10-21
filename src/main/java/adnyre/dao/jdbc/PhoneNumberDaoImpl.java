@@ -1,6 +1,5 @@
 package adnyre.dao.jdbc;
 
-import adnyre.dao.jdbc.PhoneNumberDao;
 import adnyre.exception.DaoException;
 import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
@@ -17,7 +16,10 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 //@Repository("phoneNumberDao")
@@ -27,7 +29,7 @@ public class PhoneNumberDaoImpl implements PhoneNumberDao {
 
     private static final Logger LOGGER = Logger.getLogger(PhoneNumberDaoImpl.class);
 
-//    @Autowired
+    //    @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override

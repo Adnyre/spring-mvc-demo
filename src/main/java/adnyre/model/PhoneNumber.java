@@ -14,7 +14,7 @@ public class PhoneNumber implements BaseEntity {
 
     @JsonBackReference
     @ManyToOne //Multiple representations of the same entity [adnyre.model.PhoneNumber#1] are being merged
-    @JoinColumn(name="contact_id", referencedColumnName="id")
+    @JoinColumn(name = "contact_id", referencedColumnName = "id")
     public Contact getContact() {
         return contact;
     }

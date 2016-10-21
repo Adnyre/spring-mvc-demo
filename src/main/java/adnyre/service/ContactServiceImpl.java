@@ -30,7 +30,11 @@ public class ContactServiceImpl implements ContactService {
     public Contact createContact(Contact contact) throws ServiceException {
         try {
             LOGGER.debug("Creating new contact");
-            return dao.create(contact);
+            if (countryService.checkIfCodeExists(contact.getCountryCode())) {
+                return dao.create(contact);
+            } else {
+                return null;
+            }
         } catch (DaoException e) {
             LOGGER.error("DaoException in ContactServiceImpl::create", e);
             throw new ServiceException(e);

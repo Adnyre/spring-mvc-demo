@@ -1,7 +1,6 @@
 package adnyre.dao.hibernate;
 
 import adnyre.exception.DaoException;
-import adnyre.model.Contact;
 import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Profile;
@@ -12,7 +11,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.List;
 
 @Repository("phoneNumberDao")
 @Profile("hibernate")
@@ -33,7 +31,7 @@ public class PhoneNumberDaoImpl extends GenericDaoImpl<PhoneNumber> {
         Root<PhoneNumber> root = criteriaQuery.from(PhoneNumber.class);
         criteriaQuery.select(root);
         criteriaQuery.where(builder.equal(root.get("number"), number),
-                            builder.equal(root.get("type"), type));
+                builder.equal(root.get("type"), type));
         TypedQuery<PhoneNumber> query = entityManager.createQuery(criteriaQuery);
         return query.getSingleResult();
     }

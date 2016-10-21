@@ -1,7 +1,5 @@
 package adnyre.dao.jdbc;
 
-import adnyre.dao.jdbc.ContactDao;
-import adnyre.dao.jdbc.PhoneNumberDao;
 import adnyre.exception.DaoException;
 import adnyre.model.Contact;
 import adnyre.model.PhoneNumber;
@@ -28,10 +26,10 @@ public class ContactDaoImpl implements ContactDao {
 
     private static final Logger LOGGER = Logger.getLogger(ContactDaoImpl.class);
 
-//    @Autowired
+    //    @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-//    @Autowired
+    //    @Autowired
     private PhoneNumberDao phoneNumberDAO;
 
     @Override
@@ -92,7 +90,7 @@ public class ContactDaoImpl implements ContactDao {
                 return null;
             else
                 LOGGER.debug("returning contact: " + contacts.get(0));
-                return contacts.get(0);
+            return contacts.get(0);
         } catch (DataAccessException e) {
             LOGGER.error("DataAccessException in ContactDaoImpl::find", e);
             throw new DaoException(e);

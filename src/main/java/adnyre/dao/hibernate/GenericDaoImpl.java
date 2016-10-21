@@ -51,8 +51,6 @@ public class GenericDaoImpl<T extends BaseEntity>
         return (find(t.getId()) != null) ? entityManager.merge(t) : null;
     }
 
-    //TODO!!
-    //groupToRemove.getParent().getSubgroups().remove(groupToRemov‌​e)
 
     @Override
     public void delete(T t) throws DaoException {
