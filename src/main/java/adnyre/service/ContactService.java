@@ -13,5 +13,5 @@ public interface ContactService {
 
     ContactDto getContactById(int id) throws ServiceException;
 
-    List<Contact> getAllContacts() throws ServiceException;
+    List<ContactDto> getAllContacts() throws ServiceException;
 }

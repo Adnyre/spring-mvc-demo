@@ -4,8 +4,8 @@ public class Country {
     private String alpha3Code;
     private String alpha2Code;
     private String name;
-    private String topLevelDomain;
-    private String callingCodes;
+    private String[] topLevelDomain;
+    private String[] callingCodes;
     private String capital;
     private String region;
     private String subregion;
@@ -35,19 +35,19 @@ public class Country {
         this.name = name;
     }
 
-    public String getTopLevelDomain() {
+    public String[] getTopLevelDomain() {
         return topLevelDomain;
     }
 
-    public void setTopLevelDomain(String topLevelDomain) {
+    public void setTopLevelDomain(String[] topLevelDomain) {
         this.topLevelDomain = topLevelDomain;
     }
 
-    public String getCallingCodes() {
+    public String[] getCallingCodes() {
         return callingCodes;
     }
 
-    public void setCallingCodes(String callingCodes) {
+    public void setCallingCodes(String[] callingCodes) {
         this.callingCodes = callingCodes;
     }
 

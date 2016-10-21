@@ -5,7 +5,6 @@ import adnyre.exception.DaoException;
 import adnyre.model.Contact;
 import adnyre.pojo.Country;
 import org.apache.log4j.Logger;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -13,6 +12,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ContactServiceImpl implements ContactService {
@@ -25,9 +25,6 @@ public class ContactServiceImpl implements ContactService {
 
     @Autowired
     private CountryService countryService;
-
-    @Autowired
-    private ModelMapper mapper;
 
     @Override
     public Contact createContact(Contact contact) throws ServiceException {
@@ -69,7 +66,7 @@ public class ContactServiceImpl implements ContactService {
             Contact contact = dao.find(id);
             String countryCode = contact.getCountryCode();
             Country country = countryService.getCountryByCode(countryCode);
-            ContactDto dto = mapper.map(contact, ContactDto.class);
+            ContactDto dto = convert(contact);
             dto.setCountry(country);
             return dto;
         } catch (DaoException e) {
@@ -79,15 +76,30 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> getAllContacts() throws ServiceException {
+    public List<ContactDto> getAllContacts() throws ServiceException {
         //TODO
         try {
             LOGGER.debug("Getting all contacts");
-            return dao.findAll();
+            List<Contact> contacts = dao.findAll();
+            return contacts.stream().map(x -> {
+                ContactDto z = convert(x);
+                z.setCountry(countryService.getCountryByCode(x.getCountryCode()));
+                return z;
+            }).collect(Collectors.toList());
         } catch (DaoException e) {
             LOGGER.error("DaoException in ContactServiceImpl::findAll", e);
             throw new ServiceException(e);
         }
+    }
+
+    private ContactDto convert(Contact contact) {
+        ContactDto dto = new ContactDto();
+        dto.setLastName(contact.getLastName());
+        dto.setFirstName(contact.getFirstName());
+        dto.setPhoneNumbers(contact.getPhoneNumbers());
+        dto.setCountryCode(contact.getCountryCode());
+        dto.setId(contact.getId());
+        return dto;
     }
 
     public static void main(String[] args) {

@@ -2,7 +2,9 @@ package adnyre.service;
 
 import adnyre.model.Contact;
 import adnyre.pojo.Country;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+//@JsonIgnoreProperties({"notInterstingMember", "forgetThisField"})
 public class ContactDto extends Contact{
     public Country getCountry() {
         return country;
@@ -38,19 +40,19 @@ public class ContactDto extends Contact{
         country.setName(name);
     }
 
-    public String getTopLevelDomain() {
+    public String[] getTopLevelDomain() {
         return country.getTopLevelDomain();
     }
 
-    public void setTopLevelDomain(String topLevelDomain) {
+    public void setTopLevelDomain(String[] topLevelDomain) {
         country.setTopLevelDomain(topLevelDomain);
     }
 
-    public String getCallingCodes() {
+    public String[] getCallingCodes() {
         return country.getCallingCodes();
     }
 
-    public void setCallingCodes(String callingCodes) {
+    public void setCallingCodes(String[] callingCodes) {
         country.setCallingCodes(callingCodes);
     }
 

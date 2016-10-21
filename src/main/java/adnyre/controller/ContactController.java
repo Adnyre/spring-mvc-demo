@@ -38,7 +38,7 @@ public class ContactController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<Contact>> getAllContacts() {
+    public ResponseEntity<List<ContactDto>> getAllContacts() {
         LOGGER.debug("Finding all contacts");
         return new ResponseEntity<>(service.getAllContacts(), OK);
     }

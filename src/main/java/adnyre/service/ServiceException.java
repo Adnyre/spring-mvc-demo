@@ -11,7 +11,7 @@ public class ServiceException extends RuntimeException {
 
     private final void log() {
         LOGGER.error("Service error thrown");
-        LOGGER.trace("Cause: ", this.getCause());
+        LOGGER.error("Cause: ", this.getCause());
     }
 
     public ServiceException(Throwable cause) {
