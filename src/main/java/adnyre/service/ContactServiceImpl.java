@@ -5,6 +5,7 @@ import adnyre.exception.DaoException;
 import adnyre.model.Contact;
 import adnyre.pojo.Country;
 import org.apache.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -22,7 +23,11 @@ public class ContactServiceImpl implements ContactService {
     @Qualifier("contactDao")
     private GenericDao<Contact> dao;
 
+    @Autowired
     private CountryService countryService;
+
+    @Autowired
+    private ModelMapper mapper;
 
     @Override
     public Contact createContact(Contact contact) throws ServiceException {
@@ -64,12 +69,9 @@ public class ContactServiceImpl implements ContactService {
             Contact contact = dao.find(id);
             String countryCode = contact.getCountryCode();
             Country country = countryService.getCountryByCode(countryCode);
-            return new ContactDto();
-
-
-
-            //TODO
-            return null;
+            ContactDto dto = mapper.map(contact, ContactDto.class);
+            dto.setCountry(country);
+            return dto;
         } catch (DaoException e) {
             LOGGER.error("DaoException in ContactServiceImpl::find", e);
             throw new ServiceException(e);
@@ -78,6 +80,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public List<Contact> getAllContacts() throws ServiceException {
+        //TODO
         try {
             LOGGER.debug("Getting all contacts");
             return dao.findAll();

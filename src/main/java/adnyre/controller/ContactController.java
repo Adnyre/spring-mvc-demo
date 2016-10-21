@@ -1,6 +1,7 @@
 package adnyre.controller;
 
 import adnyre.model.Contact;
+import adnyre.service.ContactDto;
 import adnyre.service.ContactService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,9 @@ public class ContactController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Contact> getContact(@PathVariable("id") int id) {
+    public ResponseEntity<ContactDto> getContact(@PathVariable("id") int id) {
         LOGGER.debug("Finding contact by id: " + id);
-        Contact contact = service.getContactById(id);
+        ContactDto contact = service.getContactById(id);
         if (contact == null) {
             LOGGER.debug("No contact found with id: " + id);
             return new ResponseEntity<>(NOT_FOUND);
