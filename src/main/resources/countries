@@ -1,0 +1,9 @@
+[{"alpha3Code": "UKR",
+  "name": "Ukraine"},
+  {"alpha3Code": "USA",
+    "name": "United States of America"},
+  {"alpha3Code": "POL",
+    "name": "Poland"},
+  {"alpha3Code": "FRA",
+    "name": "France"}
+]

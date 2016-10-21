@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Profile("real")
 public class ContactServiceImpl implements ContactService {
 
     private static final Logger LOGGER = Logger.getLogger(ContactServiceImpl.class);
@@ -33,6 +35,7 @@ public class ContactServiceImpl implements ContactService {
             if (countryService.checkIfCodeExists(contact.getCountryCode())) {
                 return dao.create(contact);
             } else {
+                LOGGER.debug("code doesn't exist");
                 return null;
             }
         } catch (DaoException e) {
