@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Profile("real")
 public class ContactServiceImpl implements ContactService {
 
     private static final Logger LOGGER = Logger.getLogger(ContactServiceImpl.class);

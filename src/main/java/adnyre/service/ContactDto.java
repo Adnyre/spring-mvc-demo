@@ -2,8 +2,10 @@ package adnyre.service;
 
 import adnyre.model.Contact;
 import adnyre.pojo.Country;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-//@JsonIgnoreProperties({"notInterstingMember", "forgetThisField"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ContactDto extends Contact {
     public Country getCountry() {
         return country;
@@ -13,6 +15,7 @@ public class ContactDto extends Contact {
         this.country = country;
     }
 
+    @JsonIgnore
     private Country country;
 
     public String getAlpha3Code() {

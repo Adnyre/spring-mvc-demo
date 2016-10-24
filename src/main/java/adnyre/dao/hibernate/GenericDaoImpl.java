@@ -16,7 +16,6 @@ import javax.persistence.Query;
 import java.util.List;
 
 @Repository("genericDao")
-@Profile("hibernate")
 @Transactional
 public class GenericDaoImpl<T extends BaseEntity>
         implements GenericDao<T> {

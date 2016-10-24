@@ -13,7 +13,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 @Repository("phoneNumberDao")
-@Profile("hibernate")
 @Transactional
 public class PhoneNumberDaoImpl extends GenericDaoImpl<PhoneNumber> {
 

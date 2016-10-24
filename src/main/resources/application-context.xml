@@ -71,6 +71,8 @@
         </property>
     </bean>
 
+    <bean id="countryService" class="adnyre.service.MockCountryService" init-method="worker"/>
+
     <context:property-placeholder location="classpath*:jdbc.properties"/>
 
 
