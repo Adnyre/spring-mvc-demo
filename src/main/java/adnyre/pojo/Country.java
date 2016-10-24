@@ -1,5 +1,8 @@
 package adnyre.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Country {
     private String alpha3Code;
     private String alpha2Code;

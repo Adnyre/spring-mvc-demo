@@ -3,9 +3,10 @@ package adnyre.service;
 import adnyre.model.Contact;
 import adnyre.pojo.Country;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ContactDto extends Contact {
     public Country getCountry() {
         return country;

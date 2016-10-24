@@ -3,18 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
-        http://www.springframework.org/schema/util
-        http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
-    <context:component-scan base-package="adnyre"/>
     <context:annotation-config/>
     <tx:annotation-driven proxy-target-class="true"
                           transaction-manager="transactionManager"/>
@@ -60,24 +55,6 @@
 
     <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
 
-    <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
-        <property name="targetObject" ref="objectMapper"/>
-        <property name="targetMethod" value="configure"/>
-        <property name="arguments">
-            <list>
-                <value type="com.fasterxml.jackson.databind.DeserializationFeature">FAIL_ON_UNKNOWN_PROPERTIES</value>
-                <value>false</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="countryService" class="adnyre.service.MockCountryService" init-method="worker"/>
-
     <context:property-placeholder location="classpath*:jdbc.properties"/>
-
-
-    <!--<bean id="contactDao" class="adnyre.dao.hibernate.ContactDaoImpl" />-->
-    <!--<bean id="phoneNumberDao" class="adnyre.dao.hibernate.PhoneNumberDaoImpl" />-->
-    <!--<bean id="contactService" class="adnyre.service.ContactServiceImpl" />-->
 
 </beans>

@@ -15,7 +15,6 @@ public class Contact implements BaseEntity {
     private List<PhoneNumber> phoneNumbers = new ArrayList<>();
     private String countryCode;
 
-    //CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.MERGE
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "contact", cascade = {CascadeType.MERGE}, orphanRemoval = true) //
     @JsonManagedReference
     public List<PhoneNumber> getPhoneNumbers() {
