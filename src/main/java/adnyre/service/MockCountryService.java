@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Profile("dev")
 public class MockCountryService implements CountryService {
 
-    private static List<Country> COUNTRIES;
+    private static List<Country> countries;
 
     private static final Logger LOGGER = Logger.getLogger(MockCountryService.class);
 
@@ -36,7 +36,7 @@ public class MockCountryService implements CountryService {
     public boolean checkIfCodeExists(String code) {
         lock.readLock().lock();
         try {
-            return COUNTRIES.stream().map(Country::getAlpha3Code).anyMatch(x -> x.equalsIgnoreCase(code));
+            return countries.stream().anyMatch(x -> x.getAlpha3Code().equalsIgnoreCase(code));
         } finally {
             lock.readLock().unlock();
         }
@@ -46,23 +46,26 @@ public class MockCountryService implements CountryService {
     public Country getCountryByCode(String code) {
         lock.readLock().lock();
         try {
-            Optional<Country> opt = COUNTRIES.stream().filter(x -> x.getAlpha3Code().equalsIgnoreCase(code)).findFirst();
+            Optional<Country> opt = countries.stream().filter(x -> x.getAlpha3Code().equalsIgnoreCase(code)).findFirst();
             if (opt.isPresent()) {
                 return opt.get();
             }
+            LOGGER.debug("returning country = null");
             return null;
         } finally {
             lock.readLock().unlock();
         }
-
     }
 
     @Override
     public List<String> getAllCodes() {
+        LOGGER.debug("trying to access lock in getAllCodes()");
         lock.readLock().lock();
         try {
-            return COUNTRIES.stream().map(Country::getAlpha3Code).collect(Collectors.toList());
+            LOGGER.debug("getting country codes");
+            return countries.stream().map(Country::getAlpha3Code).collect(Collectors.toList());
         } finally {
+            LOGGER.debug("unlocking in getAllCodes()");
             lock.readLock().unlock();
         }
     }
@@ -70,32 +73,22 @@ public class MockCountryService implements CountryService {
     @PostConstruct
     private void worker() {
         LOGGER.debug("worker method invoked");
-        final CountDownLatch latch = new CountDownLatch(1);
+//        lock.writeLock().lock();
         Thread thread = new Thread(() -> {
-            try (InputStream in = this.getClass().getClassLoader().getResourceAsStream("countries")) {
-                lock.writeLock().lock();
-                try {
-                    COUNTRIES = mapper.readValue(in, new TypeReference<List<Country>>() {
-                    });
-                } finally {
-                    lock.writeLock().unlock();
-                }
-            } catch (IOException e) {
-                LOGGER.error("Exception in worker()", e);
-                throw new ServiceException(e);
-            }
-            LOGGER.debug("reading country info from file for the 1st time");
-            latch.countDown();
             while (true) {
                 try (InputStream in = this.getClass().getClassLoader().getResourceAsStream("countries")) {
-                    TimeUnit.MINUTES.sleep(1);
+                    LOGGER.debug("locking in worker()");
                     lock.writeLock().lock();
                     try {
-                        COUNTRIES = mapper.readValue(in, new TypeReference<List<Country>>() {
+                        countries = mapper.readValue(in, new TypeReference<List<Country>>() {
                         });
+                        LOGGER.debug("sleeping for 15 secs");
+                        TimeUnit.SECONDS.sleep(15);
                     } finally {
+                        LOGGER.debug("unlocking in worker()");
                         lock.writeLock().unlock();
                     }
+                    TimeUnit.MINUTES.sleep(1);
                 } catch (IOException | InterruptedException e) {
                     LOGGER.error("Exception in worker()", e);
                     throw new ServiceException(e);
@@ -105,11 +98,9 @@ public class MockCountryService implements CountryService {
         });
         thread.setDaemon(true);
         thread.start();
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            LOGGER.error("Exception in worker()", e);
-            throw new ServiceException(e);
-        }
+    }
+
+    private void readCountries() {
+
     }
 }

@@ -2,17 +2,19 @@ package adnyre.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Country {
     private String alpha3Code;
     private String alpha2Code;
     private String name;
-    private String[] topLevelDomain;
-    private String[] callingCodes;
+    private List<String> topLevelDomain;
+    private List<String> callingCodes;
     private String capital;
     private String region;
     private String subregion;
-    private String[] altSpellings;
+    private List<String> altSpellings;
 
     public String getAlpha3Code() {
         return alpha3Code;
@@ -38,19 +40,19 @@ public class Country {
         this.name = name;
     }
 
-    public String[] getTopLevelDomain() {
+    public List<String> getTopLevelDomain() {
         return topLevelDomain;
     }
 
-    public void setTopLevelDomain(String[] topLevelDomain) {
+    public void setTopLevelDomain(List<String> topLevelDomain) {
         this.topLevelDomain = topLevelDomain;
     }
 
-    public String[] getCallingCodes() {
+    public List<String> getCallingCodes() {
         return callingCodes;
     }
 
-    public void setCallingCodes(String[] callingCodes) {
+    public void setCallingCodes(List<String> callingCodes) {
         this.callingCodes = callingCodes;
     }
 
@@ -78,11 +80,11 @@ public class Country {
         this.subregion = subregion;
     }
 
-    public String[] getAltSpellings() {
+    public List<String> getAltSpellings() {
         return altSpellings;
     }
 
-    public void setAltSpellings(String[] altSpellings) {
+    public void setAltSpellings(List<String> altSpellings) {
         this.altSpellings = altSpellings;
     }
 }

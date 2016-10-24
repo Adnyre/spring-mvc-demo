@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContactDto extends Contact {
     public Country getCountry() {
@@ -43,19 +45,19 @@ public class ContactDto extends Contact {
         country.setName(name);
     }
 
-    public String[] getTopLevelDomain() {
+    public List<String> getTopLevelDomain() {
         return country.getTopLevelDomain();
     }
 
-    public void setTopLevelDomain(String[] topLevelDomain) {
+    public void setTopLevelDomain(List<String> topLevelDomain) {
         country.setTopLevelDomain(topLevelDomain);
     }
 
-    public String[] getCallingCodes() {
+    public List<String> getCallingCodes() {
         return country.getCallingCodes();
     }
 
-    public void setCallingCodes(String[] callingCodes) {
+    public void setCallingCodes(List<String> callingCodes) {
         country.setCallingCodes(callingCodes);
     }
 
@@ -83,11 +85,11 @@ public class ContactDto extends Contact {
         country.setSubregion(subregion);
     }
 
-    public String[] getAltSpellings() {
+    public List<String> getAltSpellings() {
         return country.getAltSpellings();
     }
 
-    public void setAltSpellings(String[] altSpellings) {
+    public void setAltSpellings(List<String> altSpellings) {
         country.setAltSpellings(altSpellings);
     }
 }
