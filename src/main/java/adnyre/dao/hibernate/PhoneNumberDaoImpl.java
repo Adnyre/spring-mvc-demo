@@ -3,7 +3,6 @@ package adnyre.dao.hibernate;
 import adnyre.exception.DaoException;
 import adnyre.model.PhoneNumber;
 import org.apache.log4j.Logger;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

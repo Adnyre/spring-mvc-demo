@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,7 @@ public class MockCountryService implements CountryService {
 
     private static final Logger LOGGER = Logger.getLogger(MockCountryService.class);
 
-    private final ReadWriteLock lock = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     @Autowired
     private ObjectMapper mapper;
@@ -59,13 +58,14 @@ public class MockCountryService implements CountryService {
 
     @Override
     public List<String> getAllCodes() {
-        LOGGER.debug("trying to access lock in getAllCodes()");
+        LOGGER.debug("trying to access readLock in getAllCodes()");
         lock.readLock().lock();
+        LOGGER.debug("readLock acquired in getAllCodes()");
         try {
             LOGGER.debug("getting country codes");
             return countries.stream().map(Country::getAlpha3Code).collect(Collectors.toList());
         } finally {
-            LOGGER.debug("unlocking in getAllCodes()");
+            LOGGER.debug("unlocking readLock in getAllCodes()");
             lock.readLock().unlock();
         }
     }
@@ -73,19 +73,23 @@ public class MockCountryService implements CountryService {
     @PostConstruct
     private void worker() {
         LOGGER.debug("worker method invoked");
-//        lock.writeLock().lock();
+        CountDownLatch latch = new CountDownLatch(1);
         Thread thread = new Thread(() -> {
             while (true) {
                 try (InputStream in = this.getClass().getClassLoader().getResourceAsStream("countries")) {
                     LOGGER.debug("locking in worker()");
                     lock.writeLock().lock();
+                    LOGGER.debug("writeLock locked in worker()");
                     try {
                         countries = mapper.readValue(in, new TypeReference<List<Country>>() {
                         });
                         LOGGER.debug("sleeping for 15 secs");
                         TimeUnit.SECONDS.sleep(15);
+                        if (latch.getCount() > 0) {
+                            latch.countDown();
+                        }
                     } finally {
-                        LOGGER.debug("unlocking in worker()");
+                        LOGGER.debug("unlocking writeLock in worker()");
                         lock.writeLock().unlock();
                     }
                     TimeUnit.MINUTES.sleep(1);
@@ -98,9 +102,11 @@ public class MockCountryService implements CountryService {
         });
         thread.setDaemon(true);
         thread.start();
-    }
-
-    private void readCountries() {
-
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            LOGGER.error("Exception in worker()", e);
+            throw new ServiceException(e);
+        }
     }
 }
